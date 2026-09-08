@@ -29,7 +29,7 @@ export const OrderProvider = ({ children }) => {
     }
   }, [orders]);
 
-  const createOrder = ({ customer, items, subtotal, discount, deliveryFee, total, paymentMethod }) => {
+  const createOrder = ({ customer, items, subtotal, discount, deliveryFee, total, paymentMethod, upiRef }) => {
     const orderId = `FN${Date.now().toString().slice(-6)}${Math.floor(10 + Math.random() * 90)}`;
     const newOrder = {
       id: orderId,
@@ -41,6 +41,7 @@ export const OrderProvider = ({ children }) => {
       deliveryFee,
       total,
       paymentMethod,
+      upiRef: upiRef || null,
       status: 'Order Placed',
       estimatedDelivery: 'Today in 45-60 mins',
       timeline: [

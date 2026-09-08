@@ -3,14 +3,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
 import { 
-  Truck, ShieldCheck, MapPin, CreditCard, Banknote, 
-  Smartphone, Building2, CheckCircle2, ChevronRight 
+  Truck, ShieldCheck, MapPin, Smartphone, 
+  CheckCircle2, ChevronRight, Copy, Check, Download, 
+  ExternalLink, X, QrCode, AlertCircle, Sparkles, CheckCheck
 } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { cartItems, subtotal, totalSavings, deliveryFee, finalTotal, clearCart } = useCart();
   const { createOrder } = useOrders();
   const navigate = useNavigate();
+
+  const [copiedUpi, setCopiedUpi] = useState(false);
+  const [showFullQr, setShowFullQr] = useState(false);
 
   const [form, setForm] = useState({
     name: '',
@@ -19,10 +23,12 @@ export default function CheckoutPage() {
     address: '',
     locality: '',
     landmark: '',
-    city: 'Bengaluru',
-    pincode: '560001',
+    city: 'West Bengal',
+    pincode: '721430',
     deliverySlot: 'Standard (Today within 2 hrs)',
-    paymentMethod: 'COD'
+    paymentMethod: 'UPI',
+    upiTransactionId: '',
+    upiConfirmed: true
   });
 
   const [errors, setErrors] = useState({});
@@ -63,6 +69,12 @@ export default function CheckoutPage() {
     return Object.keys(err).length === 0;
   };
 
+  const handleCopyUpi = () => {
+    navigator.clipboard.writeText('6297622545@naviaxis');
+    setCopiedUpi(true);
+    setTimeout(() => setCopiedUpi(false), 2500);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -70,6 +82,10 @@ export default function CheckoutPage() {
     setSubmitting(true);
 
     setTimeout(() => {
+      const paymentSummary = form.upiTransactionId.trim()
+        ? `UPI (Buddhadev Bera • UTR: ${form.upiTransactionId.trim()})`
+        : 'UPI QR (Buddhadev Bera • 6297622545@naviaxis)';
+
       const order = createOrder({
         customer: {
           name: form.name,
@@ -92,7 +108,8 @@ export default function CheckoutPage() {
         discount: totalSavings,
         deliveryFee,
         total: finalTotal,
-        paymentMethod: form.paymentMethod
+        paymentMethod: paymentSummary,
+        upiRef: form.upiTransactionId.trim() || null
       });
 
       clearCart();
@@ -269,106 +286,200 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Payment Method Selection */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-              <div className="flex items-center gap-2 text-slate-900 font-bold text-lg mb-6 pb-3 border-b border-slate-100">
-                <CreditCard className="w-5 h-5 text-emerald-700" />
-                <h2>2. Payment Method</h2>
+            {/* Payment Method Selection (Exclusive UPI & QR Code) */}
+            <div className="bg-white rounded-3xl border-2 border-emerald-500/40 p-6 sm:p-8 shadow-sm relative overflow-hidden">
+              {/* Top Accent Band */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-400" />
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-6 gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-sm">
+                    <QrCode className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+                        2. Payment Method — Official Store UPI &amp; QR
+                      </h2>
+                      <span className="hidden sm:inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2 py-0.5 rounded-full border border-emerald-300">
+                        <CheckCheck className="w-3 h-3" /> Only Accepted Method
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Direct settlement to Owner Buddhadev Bera • Zero gateway fees • 100% Secure
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-3">
-                {/* Cash on Delivery */}
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                  form.paymentMethod === 'COD' ? 'border-emerald-600 bg-emerald-50/60' : 'border-slate-200 bg-white hover:bg-slate-50'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="COD"
-                      checked={form.paymentMethod === 'COD'}
-                      onChange={handleChange}
-                      className="text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div className="flex items-center gap-2.5">
-                      <Banknote className="w-5 h-5 text-emerald-700" />
-                      <div>
-                        <span className="font-bold text-sm text-slate-900 block">Cash on Delivery (COD) / Pay on Delivery</span>
-                        <span className="text-xs text-slate-500">Pay cash or scan QR at your doorstep upon arrival</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">Recommended</span>
-                </label>
+              {/* Security & Exclusivity Banner */}
+              <div className="mb-6 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start sm:items-center gap-3">
+                <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5 sm:mt-0" />
+                <div className="leading-relaxed">
+                  <strong className="font-bold">Exclusive Store Payment:</strong> All other payment methods (Cards, Net Banking &amp; COD) have been removed. Pay directly to <strong>Buddhadev Bera</strong> via UPI QR code or UPI ID for immediate order packing and doorstep dispatch.
+                </div>
+              </div>
 
-                {/* UPI */}
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                  form.paymentMethod === 'UPI' ? 'border-emerald-600 bg-emerald-50/60' : 'border-slate-200 bg-white hover:bg-slate-50'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="UPI"
-                      checked={form.paymentMethod === 'UPI'}
-                      onChange={handleChange}
-                      className="text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div className="flex items-center gap-2.5">
-                      <Smartphone className="w-5 h-5 text-indigo-600" />
-                      <div>
-                        <span className="font-bold text-sm text-slate-900 block">UPI (Google Pay, PhonePe, Paytm, BHIM)</span>
-                        <span className="text-xs text-slate-500">Fast and instant zero-fee digital payment</span>
-                      </div>
-                    </div>
+              {/* Main UPI & QR Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                
+                {/* Left side: High-Res Scannable QR Pass */}
+                <div className="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 text-center">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-bold text-slate-700 mb-3 shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Scan with Any UPI App</span>
                   </div>
-                </label>
 
-                {/* Cards */}
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                  form.paymentMethod === 'CARD' ? 'border-emerald-600 bg-emerald-50/60' : 'border-slate-200 bg-white hover:bg-slate-50'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="CARD"
-                      checked={form.paymentMethod === 'CARD'}
-                      onChange={handleChange}
-                      className="text-emerald-600 focus:ring-emerald-500"
+                  {/* QR Image Frame */}
+                  <div 
+                    onClick={() => setShowFullQr(true)}
+                    className="group relative bg-white p-2.5 rounded-2xl border-2 border-emerald-500/40 shadow-md cursor-pointer hover:shadow-lg transition max-w-[220px]"
+                    title="Click to view full screen pass"
+                  >
+                    <img 
+                      src="/upi-qr-code.png" 
+                      alt="Buddhadev Bera Official Navi UPI QR Code" 
+                      className="w-full h-auto rounded-xl object-contain"
                     />
-                    <div className="flex items-center gap-2.5">
-                      <CreditCard className="w-5 h-5 text-amber-600" />
-                      <div>
-                        <span className="font-bold text-sm text-slate-900 block">Credit / Debit Card</span>
-                        <span className="text-xs text-slate-500">Visa, MasterCard, RuPay cards accepted</span>
-                      </div>
+                    <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/20 rounded-xl transition flex items-center justify-center opacity-0 group-hover:opacity-100 text-white font-bold text-xs">
+                      <span className="bg-slate-900/80 px-2.5 py-1 rounded-lg">Click to Enlarge</span>
                     </div>
                   </div>
-                </label>
 
-                {/* Net Banking */}
-                <label className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition ${
-                  form.paymentMethod === 'NETBANKING' ? 'border-emerald-600 bg-emerald-50/60' : 'border-slate-200 bg-white hover:bg-slate-50'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="NETBANKING"
-                      checked={form.paymentMethod === 'NETBANKING'}
-                      onChange={handleChange}
-                      className="text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div className="flex items-center gap-2.5">
-                      <Building2 className="w-5 h-5 text-teal-600" />
-                      <div>
-                        <span className="font-bold text-sm text-slate-900 block">Net Banking</span>
-                        <span className="text-xs text-slate-500">All major Indian banks supported (SBI, HDFC, ICICI, etc.)</span>
-                      </div>
+                  <p className="text-[11px] text-slate-400 mt-2">
+                    Official QR linked to Punjab National Bank
+                  </p>
+
+                  {/* Action Buttons under QR */}
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-3 w-full">
+                    <a
+                      href="/upi-qr-code.png"
+                      download="Buddhadev-Bera-FRESH-NEST-UPI-QR.png"
+                      className="inline-flex items-center gap-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-xs"
+                    >
+                      <Download className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Download QR</span>
+                    </a>
+
+                    <a
+                      href={`upi://pay?pa=6297622545@naviaxis&pn=Buddhadev%20Bera&am=${finalTotal}&cu=INR&tn=FRESHNEST%20Grocery`}
+                      className="inline-flex items-center gap-1 bg-emerald-700 hover:bg-emerald-800 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition shadow-xs"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Pay via App</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Right side: Bank Details, UPI ID Copy, UTR Input */}
+                <div className="md:col-span-7 space-y-4">
+                  {/* Amount to Pay Pill */}
+                  <div className="p-3.5 rounded-2xl bg-slate-900 text-white flex items-center justify-between shadow-sm">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold block">Amount to Pay</span>
+                      <span className="text-2xl font-black text-amber-400">₹{finalTotal}</span>
+                    </div>
+                    <span className="text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-1 rounded-full">
+                      Zero Extra Fees
+                    </span>
+                  </div>
+
+                  {/* UPI ID Copy Box */}
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200 p-3.5">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      Store UPI ID (Tap to Copy)
+                    </span>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono font-black text-slate-900 text-base sm:text-lg select-all">
+                        6297622545@naviaxis
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleCopyUpi}
+                        className={`shrink-0 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs ${
+                          copiedUpi 
+                            ? 'bg-emerald-600 text-white' 
+                            : 'bg-white hover:bg-slate-100 text-slate-800 border border-slate-300'
+                        }`}
+                      >
+                        {copiedUpi ? (
+                          <>
+                            <Check className="w-4 h-4 text-white" />
+                            <span>Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4 text-slate-500" />
+                            <span>Copy UPI ID</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
-                </label>
+
+                  {/* Account Leadership & Bank Meta */}
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase block">Account Holder</span>
+                      <span className="font-bold text-slate-900 block mt-0.5">Buddhadev Bera</span>
+                      <span className="text-[10px] text-slate-500">+91 62976 22545</span>
+                    </div>
+                    <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase block">Bank Account</span>
+                      <span className="font-bold text-slate-900 block mt-0.5">Punjab National Bank</span>
+                      <span className="text-[10px] text-emerald-700 font-bold">Primary — A/C 9276</span>
+                    </div>
+                  </div>
+
+                  {/* Accepted UPI Apps Icons / Pills */}
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                      Pay using any UPI App
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['Navi UPI', 'Google Pay', 'PhonePe', 'Paytm', 'BHIM', 'Amazon Pay', 'Cred'].map((appName) => (
+                        <span 
+                          key={appName}
+                          className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold text-[11px] shadow-2xs"
+                        >
+                          {appName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* UTR Input Field */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      UPI Transaction ID / 12-Digit UTR No. <span className="text-slate-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="upiTransactionId"
+                      value={form.upiTransactionId}
+                      onChange={handleChange}
+                      placeholder="e.g. 423589123456 (from your payment receipt)"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Found in your GPay / PhonePe / Paytm / Navi transaction details after paying.
+                    </p>
+                  </div>
+
+                  {/* Confirmation Checkbox */}
+                  <label className="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="upiConfirmed"
+                      checked={form.upiConfirmed}
+                      onChange={(e) => setForm(prev => ({ ...prev, upiConfirmed: e.target.checked }))}
+                      className="mt-0.5 text-emerald-600 focus:ring-emerald-500 rounded"
+                    />
+                    <span className="text-xs text-emerald-950 font-medium leading-relaxed">
+                      I will pay / have paid <strong>₹{finalTotal}</strong> to <strong>Buddhadev Bera</strong> (UPI ID: <span className="font-mono font-bold">6297622545@naviaxis</span> • Punjab National Bank).
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -423,17 +534,48 @@ export default function CheckoutPage() {
                 disabled={submitting}
                 className="w-full mt-6 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-md hover:shadow-lg disabled:opacity-50"
               >
-                {submitting ? 'Placing Order...' : `Place Order (₹${finalTotal})`}
+                {submitting ? 'Confirming UPI Order...' : `Confirm & Place Order (₹${finalTotal})`}
               </button>
 
               <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-400 text-center">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Encrypted 256-Bit SSL Checkout</span>
+                <span>Direct Official UPI • 256-Bit SSL Encrypted</span>
               </div>
             </div>
           </div>
         </div>
       </form>
+
+      {/* Full QR Pass Modal */}
+      {showFullQr && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 relative text-center">
+            <button
+              type="button"
+              onClick={() => setShowFullQr(false)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="font-black text-slate-900 text-base mb-1">Official UPI QR Pass</h3>
+            <p className="text-xs text-slate-500 mb-3">Buddhadev Bera • Punjab National Bank - 9276</p>
+            <div className="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 mb-4 max-h-[70vh] overflow-y-auto">
+              <img 
+                src="/upi-qr-code.png" 
+                alt="Buddhadev Bera UPI QR Code" 
+                className="w-full h-auto rounded-xl object-contain mx-auto"
+              />
+            </div>
+            <a
+              href="/upi-qr-code.png"
+              download="Buddhadev-Bera-FRESH-NEST-UPI-QR.png"
+              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition"
+            >
+              <Download className="w-4 h-4" /> Download Official QR Pass
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

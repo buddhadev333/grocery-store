@@ -189,7 +189,10 @@ export default function OrderTrackingPage() {
                 <p>{activeOrder.customer?.address}</p>
                 <p>Phone: <span className="font-mono">{activeOrder.customer?.phone}</span></p>
                 <p>Slot: <span className="text-emerald-700 font-semibold">{activeOrder.customer?.slot}</span></p>
-                <p>Payment: <span className="font-semibold">{activeOrder.paymentMethod}</span></p>
+                <p>Payment: <span className="font-semibold text-emerald-800">{activeOrder.paymentMethod}</span></p>
+                {activeOrder.upiRef && (
+                  <p>UPI UTR: <span className="font-mono font-bold text-slate-800 text-xs">{activeOrder.upiRef}</span></p>
+                )}
               </div>
             </div>
 

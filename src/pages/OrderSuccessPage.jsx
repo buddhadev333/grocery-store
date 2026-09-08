@@ -80,8 +80,14 @@ export default function OrderSuccessPage() {
           <div>
             <span className="text-xs font-semibold text-slate-400 block mb-1">Payment & Slot</span>
             <p className="font-bold text-slate-800">Method: {order.paymentMethod}</p>
+            {order.upiRef && (
+              <p className="text-xs font-mono text-emerald-700 font-bold mt-0.5">UPI Ref / UTR: {order.upiRef}</p>
+            )}
             <p className="text-slate-600 text-xs mt-1">Slot: {order.customer?.slot}</p>
             <p className="text-slate-600 text-xs mt-1">Total Paid: <strong className="text-emerald-700">₹{order.total}</strong></p>
+            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold">
+              <span>Direct UPI • Buddhadev Bera (PNB - 9276)</span>
+            </div>
           </div>
         </div>
 
