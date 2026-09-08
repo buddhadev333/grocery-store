@@ -18,6 +18,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import OrderTrackingPage from './pages/OrderTrackingPage';
 import WishlistPage from './pages/WishlistPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 
 // Scroll to top helper on route change
 function ScrollToTop() {
@@ -64,7 +65,8 @@ export default function App() {
           {/* Wishlist */}
           <Route path="/wishlist" element={<WishlistPage />} />
           
-          {/* Admin Dashboard */}
+          {/* Admin & Owner Authentication */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           
           {/* Fallback */}

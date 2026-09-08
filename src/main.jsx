@@ -5,6 +5,7 @@ import App from './App';
 import './index.css';
 
 // Context Providers
+import { AuthProvider } from './context/AuthContext';
 import { ProductProvider } from './context/ProductContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -13,15 +14,17 @@ import { OrderProvider } from './context/OrderContext';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ProductProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <OrderProvider>
-              <App />
-            </OrderProvider>
-          </WishlistProvider>
-        </CartProvider>
-      </ProductProvider>
+      <AuthProvider>
+        <ProductProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <OrderProvider>
+                <App />
+              </OrderProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </ProductProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -53,16 +53,17 @@ export const Navbar = ({ onOpenCategories }) => {
             <span className="bg-emerald-600 text-white font-bold text-[10px] px-1.5 py-0.2 rounded">
               FREE DELIVERY
             </span>
-            <span>On orders above ₹499 • Honest neighborhood grocery prices</span>
+            <span className="hidden sm:inline">On orders above ₹499 • Official Store • <strong className="text-amber-400 font-bold">Buddhadev Bera — Owner</strong></span>
+            <span className="sm:hidden">Official Store • <strong className="text-amber-400">Buddhadev Bera — Owner</strong></span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
             <Link to="/orders" className="hover:text-white transition-colors">
               📦 Track Orders
             </Link>
             <span className="text-slate-600">|</span>
-            <Link to="/admin" className="hover:text-amber-400 font-semibold transition-colors flex items-center gap-1">
-              <Settings className="w-3 h-3" />
-              Store Owner Admin
+            <Link to="/admin" className="hover:text-amber-400 font-semibold transition-colors flex items-center gap-1.5">
+              <Settings className="w-3.5 h-3.5 text-amber-400" />
+              <span>Owner / Admin</span>
             </Link>
           </div>
         </div>
@@ -78,12 +79,17 @@ export const Navbar = ({ onOpenCategories }) => {
               <img src="/logo.svg" alt="FRESH NEST Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <div className="flex items-baseline gap-1">
-                <span className="font-black text-xl tracking-tight text-emerald-900 leading-none">
-                  FRESH
-                </span>
-                <span className="font-black text-xl tracking-tight text-amber-500 leading-none">
-                  NEST
+              <div className="flex items-center gap-2">
+                <div className="flex items-baseline gap-1">
+                  <span className="font-black text-xl tracking-tight text-emerald-900 leading-none">
+                    FRESH
+                  </span>
+                  <span className="font-black text-xl tracking-tight text-amber-500 leading-none">
+                    NEST
+                  </span>
+                </div>
+                <span className="hidden sm:inline-flex text-[9px] font-extrabold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200 uppercase tracking-wider">
+                  Owner Managed
                 </span>
               </div>
               <p className="text-[10px] font-semibold text-slate-500 tracking-tight mt-0.5">

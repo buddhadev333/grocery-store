@@ -5,7 +5,7 @@ import {
   Carrot, Apple, Flame, Wheat, Layers, CircleDot, Droplet, 
   Wine, Cookie, Sparkles, Gift, Coffee, CupSoda, HeartPulse, 
   Cake, Utensils, Milk, Croissant, Smile, Sparkle, Package, 
-  PenTool, Baby, Bone, Sun, Compass 
+  PenTool, Baby, Bone, Sun, Compass, ArrowRight 
 } from 'lucide-react';
 
 const iconMap = {
@@ -19,43 +19,47 @@ export const CategoryGrid = () => {
   const { categories, products } = useProducts();
 
   return (
-    <section className="mb-12">
-      <div className="flex items-center justify-between mb-5">
+    <section className="mb-14">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
         <div>
-          <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md mb-2 inline-block">
+            Aisle Explorer
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Shop by Category
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Explore our complete 26 Indian grocery & daily-need departments
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Carefully curated daily essentials, staples, and fresh produce for your kitchen
           </p>
         </div>
         <Link 
           to="/catalog" 
-          className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline"
+          className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 group"
         >
-          View All &rarr;
+          <span>View All 26 Departments</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
         {categories.map((cat) => {
           const IconComponent = iconMap[cat.icon] || Package;
-          const count = products.filter(p => p.category.toLowerCase() === cat.name.toLowerCase()).length;
+          const count = products.filter(p => p.category.toLowerCase() === cat.name.toLowerCase() || p.categorySlug === cat.id).length;
 
           return (
             <Link
               key={cat.id}
               to={`/category/${cat.id}`}
-              className="group bg-white rounded-xl p-3 border border-slate-200 hover:border-emerald-600 hover:shadow-md transition-all flex flex-col items-center text-center"
+              className="group bg-white rounded-2xl p-4 border border-slate-200/80 hover:border-emerald-500 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col items-center text-center shadow-sm"
             >
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-white mb-2 shadow-sm group-hover:scale-110 transition-transform`}>
-                <IconComponent className="w-6 h-6" />
+              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color || 'from-emerald-600 to-teal-700'} flex items-center justify-center text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-200`}>
+                <IconComponent className="w-7 h-7" />
               </div>
-              <span className="text-xs font-bold text-slate-800 group-hover:text-emerald-800 leading-tight line-clamp-2">
+              <span className="text-xs font-bold text-slate-800 group-hover:text-emerald-800 leading-snug line-clamp-2">
                 {cat.name}
               </span>
-              <span className="text-[10px] text-slate-400 mt-1">
-                {count} items
+              <span className="text-[11px] text-slate-400 font-medium mt-1">
+                {count > 0 ? `${count} items` : 'Explore'}
               </span>
             </Link>
           );
@@ -64,3 +68,5 @@ export const CategoryGrid = () => {
     </section>
   );
 };
+
+export default CategoryGrid;
