@@ -28,7 +28,7 @@ export default function CheckoutPage() {
     deliverySlot: 'Standard (Today within 2 hrs)',
     paymentMethod: 'UPI',
     upiTransactionId: '',
-    upiConfirmed: true
+    upiConfirmed: false
   });
 
   const [errors, setErrors] = useState({});
@@ -65,6 +65,19 @@ export default function CheckoutPage() {
     if (!form.pincode.trim() || !/^\d{6}$/.test(form.pincode.trim())) {
       err.pincode = 'Enter a valid 6-digit PIN code';
     }
+
+    // MANDATORY UPI UTR VALIDATION (Prevents placing unverified orders)
+    const utr = form.upiTransactionId.trim();
+    if (!utr) {
+      err.upiTransactionId = 'Payment Required: Please enter the 12-digit UPI UTR / Transaction ID from your payment receipt.';
+    } else if (!/^\d{12}$/.test(utr)) {
+      err.upiTransactionId = `Invalid UTR (${utr.length} digits). A valid Indian UPI UTR is exactly 12 numbers (e.g. 423589123456).`;
+    }
+
+    if (!form.upiConfirmed) {
+      err.upiConfirmed = 'Please confirm that you have scanned the QR or transferred ₹' + finalTotal + ' to Buddhadev Bera.';
+    }
+
     setErrors(err);
     return Object.keys(err).length === 0;
   };
@@ -450,35 +463,71 @@ export default function CheckoutPage() {
 
                   {/* UTR Input Field */}
                   <div className="pt-2 border-t border-slate-100">
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      UPI Transaction ID / 12-Digit UTR No. <span className="text-slate-400 font-normal">(Optional)</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-bold text-slate-800">
+                        UPI Transaction ID / 12-Digit UTR No. <span className="text-rose-600 font-black">*</span>
+                      </label>
+                      <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 font-bold px-1.5 py-0.5 rounded">
+                        Required
+                      </span>
+                    </div>
                     <input
                       type="text"
                       name="upiTransactionId"
                       value={form.upiTransactionId}
-                      onChange={handleChange}
-                      placeholder="e.g. 423589123456 (from your payment receipt)"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      maxLength={12}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 12);
+                        setForm(prev => ({ ...prev, upiTransactionId: val }));
+                        if (errors.upiTransactionId) {
+                          setErrors(prev => ({ ...prev, upiTransactionId: '' }));
+                        }
+                      }}
+                      placeholder="Enter 12-digit UTR from your UPI payment receipt"
+                      className={`w-full bg-slate-50 border rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                        errors.upiTransactionId ? 'border-rose-400 bg-rose-50/60' : 'border-slate-300'
+                      }`}
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
-                      Found in your GPay / PhonePe / Paytm / Navi transaction details after paying.
-                    </p>
+                    {errors.upiTransactionId ? (
+                      <p className="text-rose-600 text-xs mt-1.5 flex items-center gap-1 font-semibold">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{errors.upiTransactionId}</span>
+                      </p>
+                    ) : (
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Found in your GPay / PhonePe / Paytm / Navi payment details receipt after transferring ₹{finalTotal}.
+                      </p>
+                    )}
                   </div>
 
                   {/* Confirmation Checkbox */}
-                  <label className="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="upiConfirmed"
-                      checked={form.upiConfirmed}
-                      onChange={(e) => setForm(prev => ({ ...prev, upiConfirmed: e.target.checked }))}
-                      className="mt-0.5 text-emerald-600 focus:ring-emerald-500 rounded"
-                    />
-                    <span className="text-xs text-emerald-950 font-medium leading-relaxed">
-                      I will pay / have paid <strong>₹{finalTotal}</strong> to <strong>Buddhadev Bera</strong> (UPI ID: <span className="font-mono font-bold">6297622545@naviaxis</span> • Punjab National Bank).
-                    </span>
-                  </label>
+                  <div className="space-y-1">
+                    <label className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition ${
+                      errors.upiConfirmed ? 'bg-rose-50 border-rose-300' : 'bg-emerald-50/80 border-emerald-200/80'
+                    }`}>
+                      <input
+                        type="checkbox"
+                        name="upiConfirmed"
+                        checked={form.upiConfirmed}
+                        onChange={(e) => {
+                          setForm(prev => ({ ...prev, upiConfirmed: e.target.checked }));
+                          if (errors.upiConfirmed) {
+                            setErrors(prev => ({ ...prev, upiConfirmed: '' }));
+                          }
+                        }}
+                        className="mt-0.5 text-emerald-600 focus:ring-emerald-500 rounded"
+                      />
+                      <span className="text-xs text-emerald-950 font-medium leading-relaxed">
+                        I confirm that I have sent <strong>₹{finalTotal}</strong> to <strong>Buddhadev Bera</strong> (UPI ID: <span className="font-mono font-bold">6297622545@naviaxis</span> • Punjab National Bank).
+                      </span>
+                    </label>
+                    {errors.upiConfirmed && (
+                      <p className="text-rose-600 text-xs mt-1 flex items-center gap-1 font-semibold">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{errors.upiConfirmed}</span>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -534,8 +583,12 @@ export default function CheckoutPage() {
                 disabled={submitting}
                 className="w-full mt-6 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-md hover:shadow-lg disabled:opacity-50"
               >
-                {submitting ? 'Confirming UPI Order...' : `Confirm & Place Order (₹${finalTotal})`}
+                {submitting ? 'Submitting Payment Proof...' : `Submit Payment & Place Order (₹${finalTotal})`}
               </button>
+
+              <p className="text-[11px] text-slate-500 mt-2 text-center">
+                🔒 Store Owner Buddhadev Bera verifies this 12-digit UTR in Punjab National Bank before order confirmation.
+              </p>
 
               <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-400 text-center">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />

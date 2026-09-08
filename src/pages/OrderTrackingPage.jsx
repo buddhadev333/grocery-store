@@ -23,7 +23,10 @@ export default function OrderTrackingPage() {
 
   // Find index of current stage
   const currentStageIndex = activeOrder 
-    ? ORDER_STAGES.findIndex(s => s.key.toLowerCase() === activeOrder.status.toLowerCase())
+    ? Math.max(0, ORDER_STAGES.findIndex(s => 
+        s.key.toLowerCase() === activeOrder.status?.toLowerCase() || 
+        activeOrder.status?.toLowerCase().includes(s.key.toLowerCase())
+      ))
     : 0;
 
   const handleAdvanceStage = () => {
@@ -100,10 +103,43 @@ export default function OrderTrackingPage() {
 
               <div className="text-right sm:text-right">
                 <span className="text-xs text-slate-400 block mb-0.5">Current Status</span>
-                <span className="text-base sm:text-lg font-black text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">
+                <span className={`text-base sm:text-lg font-black px-3 py-1 rounded-xl ${
+                  activeOrder.paymentVerified
+                    ? 'text-emerald-700 bg-emerald-50'
+                    : 'text-amber-800 bg-amber-50 border border-amber-200'
+                }`}>
                   ● {activeOrder.status}
                 </span>
               </div>
+            </div>
+
+            {/* Payment Verification Status Banner */}
+            <div className="pt-5">
+              {!activeOrder.paymentVerified ? (
+                <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/90 text-amber-900 text-xs flex items-start gap-3">
+                  <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5 animate-pulse" />
+                  <div>
+                    <strong className="text-amber-950 font-bold block text-sm">
+                      Payment Under Verification (Submitted UTR: #{activeOrder.upiRef})
+                    </strong>
+                    <p className="mt-0.5 text-amber-800 leading-relaxed">
+                      Store Owner <strong>Buddhadev Bera</strong> is verifying this transaction in Punjab National Bank. Your order will be confirmed and packed as soon as verified.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 text-emerald-900 text-xs flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-emerald-950 font-bold block text-sm">
+                      Payment Verified &amp; Order Confirmed
+                    </strong>
+                    <p className="mt-0.5 text-emerald-800 leading-relaxed">
+                      Payment confirmed in Punjab National Bank by <strong>{activeOrder.verifiedBy || 'Buddhadev Bera (Owner)'}</strong>. Your groceries are being carefully packed.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Visual Stepper */}

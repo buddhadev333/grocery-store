@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
+import { useOrders } from '../context/OrderContext';
 import { useAuth } from '../context/AuthContext';
 import { CATEGORIES } from '../data/categories';
 import { 
   Package, DollarSign, Percent, TrendingUp, AlertTriangle, 
   Search, Filter, Plus, Edit2, Trash2, Check, X, RefreshCw, 
   ArrowUpDown, Save, CheckCircle2, ShieldCheck, ShieldAlert, 
-  Lock, LogOut, AlertCircle, Sparkles, Tag, Eye, ArrowRight 
+  Lock, LogOut, AlertCircle, Sparkles, Tag, Eye, ArrowRight,
+  Clock, Phone, MapPin, Copy, XCircle, Truck, CheckCheck, ShoppingBag
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -22,8 +24,14 @@ export default function AdminDashboardPage() {
     resetToDemo 
   } = useProducts();
 
+  const { orders, verifyOrderPayment, rejectOrderPayment, updateOrderStatus } = useOrders();
   const { user, isOwner, isStaff, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Tab: 'products' | 'orders'
+  const [activeTab, setActiveTab] = useState('products');
+  const [orderFilter, setOrderFilter] = useState('all'); // 'all' | 'pending' | 'verified'
+  const [copiedUtr, setCopiedUtr] = useState(null);
 
   // Search and Filters
   const [searchTerm, setSearchTerm] = useState('');
@@ -113,6 +121,39 @@ export default function AdminDashboardPage() {
 
     return { total, lowStock, avgDiscount, totalInventoryValue };
   }, [products]);
+
+  // Orders metrics & filter
+  const pendingOrdersCount = useMemo(() => {
+    return (orders || []).filter(o => !o.paymentVerified).length;
+  }, [orders]);
+
+  const orderStats = useMemo(() => {
+    const totalOrders = orders.length;
+    const verifiedOrders = orders.filter(o => o.paymentVerified).length;
+    const totalCollected = orders
+      .filter(o => o.paymentVerified)
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+    const pendingAmount = orders
+      .filter(o => !o.paymentVerified)
+      .reduce((sum, o) => sum + (o.total || 0), 0);
+
+    return { totalOrders, verifiedOrders, totalCollected, pendingAmount };
+  }, [orders]);
+
+  const filteredOrders = useMemo(() => {
+    return (orders || []).filter(o => {
+      if (orderFilter === 'pending') return !o.paymentVerified;
+      if (orderFilter === 'verified') return o.paymentVerified;
+      return true;
+    });
+  }, [orders, orderFilter]);
+
+  const handleCopyUtr = (utr) => {
+    if (!utr) return;
+    navigator.clipboard.writeText(utr);
+    setCopiedUtr(utr);
+    setTimeout(() => setCopiedUtr(null), 2000);
+  };
 
   // Filtered products list
   const filteredProducts = useMemo(() => {
@@ -355,8 +396,55 @@ export default function AdminDashboardPage() {
         )}
       </div>
 
-      {/* Action Bar (Add Product, Reset Demo, Storefront link) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      {/* Tab Switcher: Products Catalog vs Orders & UPI Verification */}
+      <div className="flex flex-wrap items-center gap-3 mb-8 border-b border-slate-200 pb-4">
+        <button
+          type="button"
+          onClick={() => setActiveTab('products')}
+          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm transition shadow-sm ${
+            activeTab === 'products'
+              ? 'bg-slate-900 text-white shadow-md'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Package className="w-4 h-4" />
+          <span>Products &amp; Pricing</span>
+          <span className={`px-2 py-0.5 rounded-full text-xs font-black ${
+            activeTab === 'products' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+          }`}>
+            {products.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('orders')}
+          className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm transition shadow-sm ${
+            activeTab === 'orders'
+              ? 'bg-emerald-700 text-white shadow-md'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          <span>Orders &amp; UPI Verification</span>
+          {pendingOrdersCount > 0 ? (
+            <span className="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full text-xs animate-pulse">
+              {pendingOrdersCount} Pending
+            </span>
+          ) : (
+            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+              activeTab === 'orders' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+            }`}>
+              {orders.length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {activeTab === 'products' ? (
+        <>
+          {/* Action Bar (Add Product, Reset Demo, Storefront link) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
           <Link
             to="/"
@@ -683,6 +771,388 @@ export default function AdminDashboardPage() {
           </div>
         )}
       </div>
+    </>
+  ) : (
+    <div className="space-y-6">
+      {/* Bank Settlement Verification Guide Header */}
+      <div className="bg-gradient-to-r from-amber-900/90 via-slate-900 to-emerald-950 rounded-3xl p-6 sm:p-7 text-white shadow-md border border-amber-500/30">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                <span className="bg-amber-400 text-slate-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Bank Settlement Verification
+                </span>
+                <span className="text-xs text-amber-200/90 font-medium">
+                  Punjab National Bank (Primary - 9276)
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-black text-white">Owner UPI Verification Protocol</h2>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Customer orders remain in <strong className="text-amber-300">Payment Submitted (Pending Verification)</strong> until Store Owner <strong>Buddhadev Bera</strong> or <strong>Lakshmi Kanta Bera</strong> verifies the customer&apos;s 12-digit UTR in the Punjab National Bank statement.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 shrink-0 text-xs space-y-1 sm:min-w-[260px]">
+            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">
+              Store Account Coordinates
+            </div>
+            <div className="text-white font-bold">Payee: Buddhadev Bera</div>
+            <div className="text-emerald-300 font-mono font-bold">A/C: PNB (Primary - 9276)</div>
+            <div className="text-amber-300 font-mono font-semibold">UPI: 6297622545@naviaxis</div>
+            <div className="text-slate-300">Mobile: +91 6297622545</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Orders Metrics Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0">
+            <ShoppingBag className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-slate-400 block uppercase">Total Orders</span>
+            <span className="text-2xl font-black text-slate-900">{orderStats.totalOrders}</span>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 border border-amber-200 bg-amber-50/40 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+            <Clock className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-amber-800 block uppercase">Pending Verification</span>
+            <span className="text-2xl font-black text-amber-700">{pendingOrdersCount}</span>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 border border-emerald-200 bg-emerald-50/40 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-emerald-800 block uppercase">Verified Orders</span>
+            <span className="text-2xl font-black text-emerald-700">{orderStats.verifiedOrders}</span>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+            <DollarSign className="w-6 h-6" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-slate-400 block uppercase">Confirmed Revenue</span>
+            <span className="text-2xl font-black text-slate-900">₹{orderStats.totalCollected.toLocaleString('en-IN')}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setOrderFilter('all')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition ${
+              orderFilter === 'all'
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            All Orders ({orders.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setOrderFilter('pending')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+              orderFilter === 'pending'
+                ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>Pending Verification ({pendingOrdersCount})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setOrderFilter('verified')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+              orderFilter === 'verified'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+            }`}
+          >
+            <Check className="w-3.5 h-3.5" />
+            <span>Verified &amp; Confirmed ({orderStats.verifiedOrders})</span>
+          </button>
+        </div>
+
+        <span className="text-xs text-slate-500 font-semibold">
+          Showing {filteredOrders.length} {filteredOrders.length === 1 ? 'order' : 'orders'}
+        </span>
+      </div>
+
+      {/* Orders List */}
+      {filteredOrders.length === 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center shadow-sm">
+          <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-400">
+            <ShoppingBag className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-800 mb-1">No Orders in this View</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            {orderFilter === 'pending'
+              ? 'There are currently no customer orders waiting for payment verification.'
+              : orderFilter === 'verified'
+              ? 'No verified orders found in this filter.'
+              : 'No customer orders have been placed yet. Orders will appear here in real-time as customers place orders.'}
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {filteredOrders.map(order => {
+            const isPending = !order.paymentVerified && order.status !== 'Payment Rejected';
+            const isRejected = order.status === 'Payment Rejected';
+            const orderUtr = order.upiRef || order.paymentDetails?.utr;
+
+            return (
+              <div
+                key={order.id}
+                className={`bg-white rounded-3xl border shadow-sm p-6 transition ${
+                  isPending
+                    ? 'border-amber-300 ring-1 ring-amber-200 bg-amber-50/10'
+                    : isRejected
+                    ? 'border-rose-200 bg-rose-50/10'
+                    : 'border-slate-200'
+                }`}
+              >
+                {/* Header Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono font-black text-slate-900 text-base">
+                      Order #{order.id}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {order.createdAt ? new Date(order.createdAt).toLocaleString('en-IN', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                      }) : 'Just now'}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {isPending && (
+                      <span className="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 animate-pulse">
+                        <Clock className="w-3.5 h-3.5 text-amber-700" />
+                        <span>Payment Verification Pending</span>
+                      </span>
+                    )}
+                    {order.paymentVerified && (
+                      <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Payment Verified &amp; Confirmed</span>
+                      </span>
+                    )}
+                    {isRejected && (
+                      <span className="bg-rose-100 text-rose-900 border border-rose-300 text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <XCircle className="w-3.5 h-3.5 text-rose-700" />
+                        <span>Payment Rejected</span>
+                      </span>
+                    )}
+                    <span className="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">
+                      Stage: {order.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
+                  {/* Customer Info */}
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                      Customer &amp; Delivery
+                    </h4>
+                    <div className="space-y-1.5 text-xs sm:text-sm">
+                      <p className="font-bold text-slate-900">{order.customer?.name || 'Customer'}</p>
+                      <p className="text-slate-600 flex items-center gap-1.5">
+                        <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <a href={`tel:${order.customer?.phone}`} className="hover:text-emerald-700 font-semibold">
+                          {order.customer?.phone}
+                        </a>
+                      </p>
+                      <p className="text-slate-600 flex items-start gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                        <span className="text-xs leading-relaxed">
+                          {order.customer?.address}, {order.customer?.city} - {order.customer?.pincode}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Payment & UTR Proof Card (Crucial for Owner) */}
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                      Payment &amp; 12-Digit UTR Proof
+                    </h4>
+                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-slate-500 font-medium">Order Total:</span>
+                        <span className="text-base font-black text-slate-900">₹{order.total}</span>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-200">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 mb-1">
+                          <span>Customer UTR Ref:</span>
+                          {orderUtr && (
+                            <button
+                              type="button"
+                              onClick={() => handleCopyUtr(orderUtr)}
+                              className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1"
+                            >
+                              {copiedUtr === orderUtr ? (
+                                <>
+                                  <CheckCheck className="w-3 h-3 text-emerald-600" />
+                                  <span className="text-[10px] text-emerald-600">Copied</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-3 h-3" />
+                                  <span className="text-[10px]">Copy</span>
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </div>
+                        <div className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 font-mono font-black text-sm tracking-wider text-slate-900 text-center select-all">
+                          {orderUtr || 'No UTR provided'}
+                        </div>
+                      </div>
+
+                      <div className="text-[10px] text-slate-500 pt-1">
+                        {order.paymentVerified ? (
+                          <span className="text-emerald-700 font-semibold block">
+                            Verified by {order.verifiedBy || 'Store Owner'}
+                          </span>
+                        ) : (
+                          <span className="text-amber-800 font-semibold block">
+                            Match this 12-digit number in Punjab National Bank (9276)
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Items Ordered */}
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
+                      <span>Items Ordered</span>
+                      <span>({order.items?.length || 0} items)</span>
+                    </h4>
+                    <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                      {order.items?.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-none">
+                          <span className="font-semibold text-slate-800 truncate max-w-[150px]">
+                            {item.name}
+                          </span>
+                          <span className="text-slate-500 font-medium">
+                            {item.quantity} × ₹{item.sellingPrice || item.price}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Owner Action Buttons */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+                  <div className="text-xs text-slate-500">
+                    {isPending && (
+                      <span className="text-amber-800 font-semibold flex items-center gap-1.5">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                        <span>Action Required: Confirm receipt in PNB before packing order.</span>
+                      </span>
+                    )}
+                    {order.paymentVerified && (
+                      <span className="text-emerald-800 font-semibold flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>Payment verified. Update stage as delivery progresses.</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {isPending && isOwner && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const reason = window.prompt("Enter rejection reason (e.g. UTR not found in bank statement):", "Payment not received in Punjab National Bank statement");
+                            if (reason) {
+                              rejectOrderPayment(order.id, reason);
+                              triggerError(`Order #${order.id} payment rejected.`);
+                            }
+                          }}
+                          className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5"
+                        >
+                          <XCircle className="w-3.5 h-3.5" />
+                          <span>Reject Payment</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            verifyOrderPayment(order.id, user?.displayName || 'Buddhadev Bera (Owner)');
+                            triggerSuccess(
+                              `Order #${order.id} Payment Verified & Confirmed!`,
+                              `Verified in Punjab National Bank by ${user?.displayName || 'Buddhadev Bera'}. Order is now officially confirmed.`
+                            );
+                          }}
+                          className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Verify Payment &amp; Confirm Order</span>
+                        </button>
+                      </>
+                    )}
+
+                    {order.paymentVerified && (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[11px] font-bold text-slate-500 uppercase">Stage:</span>
+                        {['Packed', 'Out for Delivery', 'Delivered'].map(stg => (
+                          <button
+                            key={stg}
+                            type="button"
+                            disabled={order.status === stg}
+                            onClick={() => {
+                              updateOrderStatus(order.id, stg);
+                              triggerSuccess(`Order #${order.id} Status Updated`, `Current stage: ${stg}`);
+                            }}
+                            className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition ${
+                              order.status === stg
+                                ? 'bg-slate-900 text-white border-slate-900 cursor-default'
+                                : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'
+                            }`}
+                          >
+                            {stg}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  )}
 
       {/* ========================================================================= */}
       {/* 1. PRICE EDIT MODAL WITH CONFIRMATION (OWNER EXCLUSIVE)                   */}

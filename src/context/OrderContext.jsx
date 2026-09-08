@@ -4,9 +4,9 @@ const OrderContext = createContext();
 const ORDERS_STORAGE_KEY = 'fresh_nest_orders_v1';
 
 export const ORDER_STAGES = [
-  { id: 1, key: 'Order Placed', label: 'Order Placed', desc: 'We have received your order' },
-  { id: 2, key: 'Confirmed', label: 'Confirmed', desc: 'Store has verified item availability' },
-  { id: 3, key: 'Packed', label: 'Packed & Dispatched', desc: 'Carefully packed fresh from the nest' },
+  { id: 1, key: 'Payment Submitted', label: 'Payment Submitted', desc: '12-digit UTR reference recorded from customer' },
+  { id: 2, key: 'Payment Verified', label: 'Payment Verified & Confirmed', desc: 'Verified in Punjab National Bank by Buddhadev Bera' },
+  { id: 3, key: 'Packed', label: 'Packed & Ready', desc: 'Carefully packed fresh from the store' },
   { id: 4, key: 'Out for Delivery', label: 'Out for Delivery', desc: 'Delivery partner is on the way to your doorstep' },
   { id: 5, key: 'Delivered', label: 'Delivered', desc: 'Package handed over successfully' }
 ];
@@ -40,12 +40,21 @@ export const OrderProvider = ({ children }) => {
       discount,
       deliveryFee,
       total,
-      paymentMethod,
-      upiRef: upiRef || null,
-      status: 'Order Placed',
-      estimatedDelivery: 'Today in 45-60 mins',
+      paymentMethod: paymentMethod || 'Official Store UPI (6297622545@naviaxis)',
+      upiRef: upiRef || '',
+      paymentStatus: 'Pending Verification',
+      paymentVerified: false,
+      verifiedBy: null,
+      verifiedAt: null,
+      status: 'Payment Submitted',
+      estimatedDelivery: 'Today in 45-60 mins (After owner verification)',
       timeline: [
-        { status: 'Order Placed', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), completed: true }
+        { 
+          status: 'Payment Submitted', 
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
+          completed: true,
+          details: `12-digit UPI UTR #${upiRef} submitted for PNB A/C 9276`
+        }
       ]
     };
 
@@ -55,6 +64,50 @@ export const OrderProvider = ({ children }) => {
 
   const getOrder = (orderId) => {
     return orders.find(o => o.id === orderId);
+  };
+
+  const verifyOrderPayment = (orderId, verifiedBy = 'Buddhadev Bera (Owner)') => {
+    setOrders(prev => prev.map(order => {
+      if (order.id === orderId) {
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const existingTimeline = order.timeline || [];
+        const hasVerified = existingTimeline.some(t => t.status === 'Payment Verified');
+        const updatedTimeline = hasVerified
+          ? existingTimeline
+          : [...existingTimeline, {
+              status: 'Payment Verified',
+              timestamp: timeStr,
+              completed: true,
+              details: `Payment verified in Punjab National Bank by ${verifiedBy}`
+            }];
+
+        return {
+          ...order,
+          status: 'Payment Verified',
+          paymentStatus: 'Verified & Confirmed',
+          paymentVerified: true,
+          verifiedBy,
+          verifiedAt: new Date().toISOString(),
+          timeline: updatedTimeline
+        };
+      }
+      return order;
+    }));
+  };
+
+  const rejectOrderPayment = (orderId, reason = 'Payment not found in bank statement') => {
+    setOrders(prev => prev.map(order => {
+      if (order.id === orderId) {
+        return {
+          ...order,
+          status: 'Payment Rejected',
+          paymentStatus: 'Rejected',
+          paymentVerified: false,
+          rejectionReason: reason
+        };
+      }
+      return order;
+    }));
   };
 
   const updateOrderStatus = (orderId, nextStatus) => {
@@ -83,6 +136,8 @@ export const OrderProvider = ({ children }) => {
       orders,
       createOrder,
       getOrder,
+      verifyOrderPayment,
+      rejectOrderPayment,
       updateOrderStatus,
       stages: ORDER_STAGES
     }}>
