@@ -1,0 +1,356 @@
+{
+  "pricing": {
+    "prod_001": {
+      "productId": "prod_001",
+      "mrp": 650.0,
+      "sellingPrice": 599.0,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 610,
+        "localStoreRef": 620,
+        "verified": false,
+        "sourceNote": "Neighborhood supermarket weekly survey"
+      },
+      "updatedAt": "2026-09-07T08:46:36.286934+00:00"
+    },
+    "prod_002": {
+      "productId": "prod_002",
+      "mrp": 285,
+      "sellingPrice": 255,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 260,
+        "localStoreRef": 270,
+        "verified": false,
+        "sourceNote": "Local wholesale mandi check"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_003": {
+      "productId": "prod_003",
+      "mrp": 195,
+      "sellingPrice": 175,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 180,
+        "localStoreRef": 185,
+        "verified": false,
+        "sourceNote": "Regional grain distributor"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_004": {
+      "productId": "prod_004",
+      "mrp": 155,
+      "sellingPrice": 138,
+      "promotionalBadges": [
+        "Today's Deal"
+      ],
+      "scheduledSale": {
+        "name": "Weekend Cooking Essentials",
+        "salePrice": 135,
+        "startDate": "2026-09-01T00:00:00Z",
+        "endDate": "2026-09-30T23:59:59Z",
+        "active": true
+      },
+      "referencePrices": {
+        "onlineMarketRef": 142,
+        "localStoreRef": 145,
+        "verified": false,
+        "sourceNote": "Local retail survey"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_005": {
+      "productId": "prod_005",
+      "mrp": 28,
+      "sellingPrice": 26,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 28,
+        "localStoreRef": 28,
+        "verified": false,
+        "sourceNote": "Standard FMCG benchmark"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_006": {
+      "productId": "prod_006",
+      "mrp": 65,
+      "sellingPrice": 56,
+      "promotionalBadges": [
+        "Special Offer"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 58,
+        "localStoreRef": 60,
+        "verified": false,
+        "sourceNote": "Local wholesale survey"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_007": {
+      "productId": "prod_007",
+      "mrp": 285,
+      "sellingPrice": 275,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 280,
+        "localStoreRef": 285,
+        "verified": false,
+        "sourceNote": "Dairy booth & supermarket benchmark"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_008": {
+      "productId": "prod_008",
+      "mrp": 27,
+      "sellingPrice": 27,
+      "promotionalBadges": [],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 27,
+        "localStoreRef": 27,
+        "verified": false,
+        "sourceNote": "Fixed statutory dairy price"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_009": {
+      "productId": "prod_009",
+      "mrp": 95,
+      "sellingPrice": 88,
+      "promotionalBadges": [
+        "Special Offer"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 90,
+        "localStoreRef": 92,
+        "verified": false,
+        "sourceNote": "Local dairy outlet check"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_010": {
+      "productId": "prod_010",
+      "mrp": 385,
+      "sellingPrice": 330,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 345,
+        "localStoreRef": 350,
+        "verified": false,
+        "sourceNote": "Modern trade hypermarket shelf price"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_011": {
+      "productId": "prod_011",
+      "mrp": 330,
+      "sellingPrice": 285,
+      "promotionalBadges": [
+        "Today's Deal"
+      ],
+      "scheduledSale": {
+        "name": "Tea Time Special",
+        "salePrice": 279,
+        "startDate": "2026-09-01T00:00:00Z",
+        "endDate": "2026-09-30T23:59:59Z",
+        "active": true
+      },
+      "referencePrices": {
+        "onlineMarketRef": 295,
+        "localStoreRef": 310,
+        "verified": false,
+        "sourceNote": "Kirana & online quick commerce average"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_012": {
+      "productId": "prod_012",
+      "mrp": 200,
+      "sellingPrice": 180,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 185,
+        "localStoreRef": 190,
+        "verified": false,
+        "sourceNote": "Retail partner check"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_013": {
+      "productId": "prod_013",
+      "mrp": 168,
+      "sellingPrice": 148,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 152,
+        "localStoreRef": 160,
+        "verified": false,
+        "sourceNote": "Supermarket multipack price"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_014": {
+      "productId": "prod_014",
+      "mrp": 140,
+      "sellingPrice": 125,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 130,
+        "localStoreRef": 135,
+        "verified": false,
+        "sourceNote": "Local wholesale biscuit vendor"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_015": {
+      "productId": "prod_015",
+      "mrp": 120,
+      "sellingPrice": 105,
+      "promotionalBadges": [
+        "Special Offer"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 110,
+        "localStoreRef": 115,
+        "verified": false,
+        "sourceNote": "Local namkeen shop benchmark"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_016": {
+      "productId": "prod_016",
+      "mrp": 45,
+      "sellingPrice": 36,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 38,
+        "localStoreRef": 40,
+        "verified": false,
+        "sourceNote": "City mandi morning arrival rates"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_017": {
+      "productId": "prod_017",
+      "mrp": 35,
+      "sellingPrice": 26,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 28,
+        "localStoreRef": 30,
+        "verified": false,
+        "sourceNote": "Wholesale vegetable market check"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_018": {
+      "productId": "prod_018",
+      "mrp": 40,
+      "sellingPrice": 32,
+      "promotionalBadges": [
+        "Today's Deal"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 35,
+        "localStoreRef": 36,
+        "verified": false,
+        "sourceNote": "Farmer mandi rates"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_019": {
+      "productId": "prod_019",
+      "mrp": 250,
+      "sellingPrice": 215,
+      "promotionalBadges": [
+        "Best Price"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 225,
+        "localStoreRef": 230,
+        "verified": false,
+        "sourceNote": "Supermarket FMCG promo tracker"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_020": {
+      "productId": "prod_020",
+      "mrp": 185,
+      "sellingPrice": 155,
+      "promotionalBadges": [
+        "Great Value"
+      ],
+      "scheduledSale": null,
+      "referencePrices": {
+        "onlineMarketRef": 160,
+        "localStoreRef": 170,
+        "verified": false,
+        "sourceNote": "Local retail shop survey"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    "prod_021": {
+      "productId": "prod_021",
+      "mrp": 335,
+      "sellingPrice": 279,
+      "promotionalBadges": [
+        "Today's Deal"
+      ],
+      "scheduledSale": {
+        "name": "Family Hygiene Deal",
+        "salePrice": 269,
+        "startDate": "2026-09-01T00:00:00Z",
+        "endDate": "2026-09-30T23:59:59Z",
+        "active": true
+      },
+      "referencePrices": {
+        "onlineMarketRef": 289,
+        "localStoreRef": 299,
+        "verified": false,
+        "sourceNote": "Online grocery comparison survey"
+      },
+      "updatedAt": "2026-09-07T12:00:00Z"
+    }
+  }
+}

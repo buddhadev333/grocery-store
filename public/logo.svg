@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Nest base -->
+  <path d="M12 34C12 45 21 54 32 54C43 54 52 45 52 34C52 33 50 33 49 34C46 39 40 44 32 44C24 44 18 39 15 34C14 33 12 33 12 34Z" fill="#15803d" />
+  <path d="M8 30C10 44 20 56 32 56C44 56 54 44 56 30C52 35 44 40 32 40C20 40 12 35 8 30Z" fill="#166534" />
+  <!-- Nest woven texture twigs -->
+  <path d="M16 38C22 41 28 42 34 41C40 40 46 38 48 36" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/>
+  <path d="M14 43C20 47 28 48 35 47C42 46 47 43 50 40" stroke="#86efac" stroke-width="2" stroke-linecap="round"/>
+  <!-- Golden egg / warmth glow -->
+  <ellipse cx="32" cy="28" rx="10" ry="12" fill="#f59e0b" opacity="0.9" />
+  <ellipse cx="30" cy="26" rx="8" ry="10" fill="#fbbf24" />
+  <!-- Sprouting fresh leaves -->
+  <path d="M32 16C32 16 26 22 28 27C30 32 36 29 35 24C34 19 32 16 32 16Z" fill="#22c55e" />
+  <path d="M32 16C32 16 38 12 44 15C50 18 47 25 42 25C37 25 33 19 32 16Z" fill="#16a34a" />
+  <path d="M28 20C28 20 22 17 18 21C14 25 19 30 24 29C29 28 29 23 28 20Z" fill="#4ade80" />
+</svg>

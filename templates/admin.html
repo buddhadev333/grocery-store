@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Owner Admin - Pricing & Competitiveness Hub | FRESH NEST</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+  <!-- Admin Navigation Topbar -->
+  <nav class="admin-navbar">
+    <div class="admin-nav-left">
+      <a href="{{ url_for('admin_dashboard') }}" class="admin-brand">
+        <span>🌱 FRESH NEST</span>
+      </a>
+      <span class="admin-tag">PRICING & COMPETITIVE CONTROL</span>
+    </div>
+    <div class="admin-nav-right">
+      <button class="btn-secondary" onclick="exportPricingData()" style="color: #ffffff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+        📥 Export Pricing JSON
+      </button>
+      <button class="btn-secondary" onclick="triggerImportPricing()" style="color: #ffffff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+        📤 Import Pricing
+      </button>
+      <input type="file" id="importPricingFile" style="display: none;" accept=".json" onchange="handlePricingFileSelected(this)">
+      <a href="{{ url_for('index') }}" class="btn-store-view" target="_blank">
+        🛒 View Customer Storefront &rarr;
+      </a>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+
+    <!-- KPI Metric Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">Catalog Items</div>
+        <div class="metric-value">{{ products|length }}</div>
+        <div class="metric-desc">Independent pricing records synced</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">Highly Competitive</div>
+        <div class="metric-value" style="color: #15803d;">{{ competitive_summary.beating_market }}</div>
+        <div class="metric-desc">Prices beating both online & local benchmarks</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">Fair / Parity</div>
+        <div class="metric-value" style="color: #0369a1;">{{ competitive_summary.competitive }}</div>
+        <div class="metric-desc">Competitive everyday market pricing</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">Needs Price Review</div>
+        <div class="metric-value" style="color: {% if competitive_summary.above_market > 0 %}#b45309{% else %}#15803d{% endif %};">
+          {{ competitive_summary.above_market }}
+        </div>
+        <div class="metric-desc">Higher than reference benchmarks</div>
+      </div>
+    </div>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="tab-prices">
+        🏷️ Price Management & Catalog
+      </button>
+      <button class="tab-btn" data-tab="tab-competitive">
+        📊 Competitive Pricing Intelligence
+      </button>
+      <button class="tab-btn" data-tab="tab-category-rules">
+        ⚡ Category-Level Discounts
+      </button>
+      <button class="tab-btn" data-tab="tab-bulk-update">
+        📦 Bulk Price Updater
+      </button>
+      <button class="tab-btn" data-tab="tab-api-connector">
+        🔌 Future Price API Connector
+      </button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 1: PRICE MANAGEMENT & CATALOG TABLE       -->
+    <!-- ============================================== -->
+    <div id="tab-prices" class="tab-content active">
+      <div class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Product Price Management</h2>
+            <p class="panel-subtitle">Edit MRP, Selling Price, promotional tags, and scheduled sales. Changes reflect immediately on the storefront without rebuilding.</p>
+          </div>
+          <div class="panel-actions">
+            <span style="font-size: 0.8rem; color: #64748b;">
+              💡 Only neutral badges allowed: <strong>Best Price, Today's Deal, Great Value, Special Offer</strong>
+            </span>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-row">
+          <input type="text" id="adminSearchInput" class="filter-input" placeholder="Search product by title..." style="width: 280px;">
+          <select id="adminCategoryFilter" class="filter-input">
+            <option value="all">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>MRP (₹)</th>
+                <th>Selling Price (₹)</th>
+                <th>Active Price (₹)</th>
+                <th>Savings</th>
+                <th>Promotional Badges</th>
+                <th>Scheduled Sale</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr class="pricing-row" data-id="{{ p.id }}" data-name="{{ p.name }}" data-category="{{ p.category }}">
+                <td>
+                  <div class="prod-cell">
+                    <img src="{{ p.imageUrl }}" alt="{{ p.name }}" class="prod-thumb">
+                    <div>
+                      <div class="prod-title">{{ p.name }}</div>
+                      <div class="prod-pack">{{ p.brand }} • {{ p.packSize }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span style="color: #475569; font-size: 0.8rem;">{{ p.category }}</span></td>
+                <td><span class="mrp-val">₹{{ p.pricing.mrp }}</span></td>
+                <td><strong class="price-val">₹{{ p.pricing.sellingPrice }}</strong></td>
+                <td>
+                  <strong style="color: #15803d; font-size: 0.95rem;">₹{{ p.pricing.effectivePrice }}</strong>
+                  {% if p.pricing.hasActiveSale %}
+                  <span style="font-size: 0.675rem; background: #fee2e2; color: #dc2626; padding: 2px 4px; border-radius: 3px; font-weight: 700;">SALE ACTIVE</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="savings-tag">
+                    ₹{{ p.pricing.savingsAmount }} ({{ p.pricing.discountPercent }}%)
+                  </span>
+                </td>
+                <td>
+                  {% for b in p.pricing.badges %}
+                    <span class="badge" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; margin-right: 4px;">{{ b }}</span>
+                  {% else %}
+                    <span style="color: #94a3b8; font-size: 0.75rem;">None</span>
+                  {% endfor %}
+                </td>
+                <td>
+                  {% if p.pricing.hasActiveSale %}
+                    <span style="color: #dc2626; font-weight: 700; font-size: 0.75rem;">{{ p.pricing.saleName }} (₹{{ p.pricing.effectivePrice }})</span>
+                  {% else %}
+                    <span style="color: #94a3b8; font-size: 0.75rem;">None</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="openEditPriceModal('{{ p.id }}')">
+                    ✏️ Edit Price
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 2: COMPETITIVE PRICING INTELLIGENCE       -->
+    <!-- ============================================== -->
+    <div id="tab-competitive" class="tab-content">
+      <div class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Competitive Pricing Intelligence</h2>
+            <p class="panel-subtitle">Maintain internal reference benchmarks (Online Market & Local Store) to evaluate affordability without making illegal or unsubstantiated public claims.</p>
+          </div>
+          <div>
+            <span class="badge-status badge-info">🔒 STRICTLY INTERNAL BENCHMARKS</span>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 0.85rem; color: #475569;">
+          <strong>Strategy Note:</strong> To maintain customer loyalty, FRESH NEST should match or beat local store prices on everyday household staples (Atta, Rice, Dals, Cooking Oils) and stay close to online market prices. Reference data is collected via store visits and distributor surveys.
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>MRP</th>
+                <th>FRESH NEST Price</th>
+                <th>Online Reference</th>
+                <th>Local Store Reference</th>
+                <th>Variance (vs Online / Local)</th>
+                <th>Competitiveness Status</th>
+                <th>Strategic Guidance</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr>
+                <td>
+                  <strong>{{ p.name }}</strong>
+                  <div style="font-size: 0.75rem; color: #64748b;">{{ p.packSize }} • {{ p.category }}</div>
+                </td>
+                <td>₹{{ p.pricing.mrp }}</td>
+                <td><strong style="color: #15803d; font-size: 1rem;">₹{{ p.pricing.effectivePrice }}</strong></td>
+                <td>
+                  {% if p.competitive.onlineMarketRef %}
+                    ₹{{ p.competitive.onlineMarketRef }}
+                  {% else %}
+                    <span style="color: #94a3b8;">Unset</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if p.competitive.localStoreRef %}
+                    ₹{{ p.competitive.localStoreRef }}
+                  {% else %}
+                    <span style="color: #94a3b8;">Unset</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if p.competitive.diffVsOnline is not none %}
+                    <span style="color: {% if p.competitive.diffVsOnline <= 0 %}#166534{% else %}#dc2626{% endif %}; font-weight: 700;">
+                      {{ p.competitive.diffVsOnline }} vs Online
+                    </span>
+                  {% endif %}
+                  <br>
+                  {% if p.competitive.diffVsLocal is not none %}
+                    <span style="color: {% if p.competitive.diffVsLocal <= 0 %}#166534{% else %}#dc2626{% endif %}; font-weight: 700;">
+                      {{ p.competitive.diffVsLocal }} vs Local
+                    </span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge-status {{ p.competitive.statusClass }}">
+                    {{ p.competitive.statusLabel }}
+                  </span>
+                </td>
+                <td style="max-width: 280px; font-size: 0.8rem; color: #475569;">
+                  {{ p.competitive.recommendation }}
+                </td>
+                <td>
+                  <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;" onclick="openEditPriceModal('{{ p.id }}')">
+                    Update Benchmark
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 3: CATEGORY-LEVEL DISCOUNTS                -->
+    <!-- ============================================== -->
+    <div id="tab-category-rules" class="tab-content">
+      <div class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Category-Level Discounts & Rules</h2>
+            <p class="panel-subtitle">Apply storewide or category-wide promotional discounts across an entire product group.</p>
+          </div>
+        </div>
+
+        <div class="rules-grid">
+          {% for rule in category_rules %}
+          <div class="rule-card {% if rule.active %}active{% endif %}">
+            <div class="rule-header">
+              <div>
+                <div class="rule-category">{{ rule.category }}</div>
+                <div class="rule-desc">{{ rule.description or 'Category rule' }}</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" {% if rule.active %}checked{% endif %} onchange="toggleCategoryRule('{{ rule.id }}')">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="rule-discount">{{ rule.discountPercent }}% OFF MRP</div>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">
+              Status: <strong>{% if rule.active %}ACTIVE ON STORE{% else %}PAUSED{% endif %}</strong>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Create New Category Rule -->
+        <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px;">Create / Update Category Discount Rule</h3>
+          <form onsubmit="saveCategoryRule(event)" style="max-width: 500px;">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="newRuleCategory" class="form-control" required>
+                {% for cat in categories %}
+                <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Discount Percentage (% off MRP)</label>
+              <input type="number" id="newRuleDiscount" class="form-control" min="1" max="70" step="0.5" placeholder="e.g. 5" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Promotion Description</label>
+              <input type="text" id="newRuleDesc" class="form-control" placeholder="e.g. Weekend Flash Sale - 5% off MRP">
+            </div>
+            <button type="submit" class="btn-primary">Set Category Rule</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 4: BULK PRICE UPDATER                      -->
+    <!-- ============================================== -->
+    <div id="tab-bulk-update" class="tab-content">
+      <div class="admin-panel" style="max-width: 650px;">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Bulk Price Adjustment</h2>
+            <p class="panel-subtitle">Apply systematic percentage or flat updates to products across categories in one operation.</p>
+          </div>
+        </div>
+
+        <form onsubmit="applyBulkPriceUpdate(event)">
+          <div class="form-group">
+            <label class="form-label">Target Scope</label>
+            <select id="bulkCategorySelect" class="form-control">
+              <option value="all">All Products in Store</option>
+              {% for cat in categories %}
+              <option value="{{ cat }}">{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Adjustment Type</label>
+            <select id="bulkActionSelect" class="form-control">
+              <option value="percent_off_mrp">Set Selling Price to % Off MRP (e.g. 8% discount)</option>
+              <option value="percent_change_selling">Adjust Selling Price by Percentage (+X% or -X%)</option>
+              <option value="flat_discount_off_mrp">Flat Discount off MRP (e.g. ₹20 off MRP)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Value</label>
+            <input type="number" id="bulkValueInput" class="form-control" step="0.5" placeholder="e.g. 10" required>
+            <small style="color: #64748b; font-size: 0.775rem;">For example: Enter 8 to give 8% off MRP across all selected items.</small>
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 10px;">
+            Apply Bulk Price Update
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 5: FUTURE PRICE API CONNECTOR              -->
+    <!-- ============================================== -->
+    <div id="tab-api-connector" class="tab-content">
+      <div class="admin-panel" style="max-width: 800px;">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Future Product & Pricing API Connector</h2>
+            <p class="panel-subtitle">Engineered for clean separation. Connect ERPs, billing software, or verified distributor APIs without modifying website code.</p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 20px;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Connector Status</h4>
+          <div style="display: grid; grid-template-columns: 180px 1fr; gap: 8px; font-size: 0.85rem;">
+            <div style="color: #64748b;">Provider Type:</div>
+            <div><strong>{{ connector_status.provider }}</strong></div>
+            <div style="color: #64748b;">Endpoint Status:</div>
+            <div><span class="badge-status badge-info">{{ connector_status.endpoint }}</span></div>
+            <div style="color: #64748b;">Compliance:</div>
+            <div><strong style="color: #15803d;">Strict Non-Scraping / Official APIs Only</strong></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ERP / Pricing API Endpoint URL</label>
+          <input type="text" class="form-control" placeholder="https://api.your-pos-system.com/v1/pricing" value="">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">API Secret Key / Bearer Token</label>
+          <input type="password" class="form-control" placeholder="••••••••••••••••••••••••••••••••">
+        </div>
+
+        <button class="btn-secondary" onclick="showToast('API connector configuration saved for staging sync.')">
+          Save Connector Settings
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Price Edit Modal -->
+  <div id="editPriceModal" class="modal-overlay" onclick="if(event.target === this) closeEditPriceModal()">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 700;" id="editProductName">Edit Price</h3>
+          <p id="editProductPack" style="font-size: 0.8rem; color: #64748b;"></p>
+        </div>
+        <button class="modal-close" onclick="closeEditPriceModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="saveProductPrice(event)">
+          <input type="hidden" id="editProductId">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">MRP (₹)</label>
+              <input type="number" id="editMrp" class="form-control" step="0.5" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">FRESH NEST Selling Price (₹)</label>
+              <input type="number" id="editSellingPrice" class="form-control" step="0.5" required>
+            </div>
+          </div>
+
+          <!-- Dynamic Live Savings Preview -->
+          <div class="calc-preview-box">
+            <span class="calc-title">Live Price Preview:</span>
+            <span id="calcSavingsPreview" class="calc-details">You Save: ₹0 (0% OFF)</span>
+          </div>
+
+          <!-- Promotional Badges (Only allowed neutral ones) -->
+          <div class="form-group">
+            <label class="form-label">Promotional Badges (Admin Controlled)</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="badge_BestPrice"> 🏷️ Best Price
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="badge_TodaysDeal"> 🔥 Today's Deal
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="badge_GreatValue"> 🌟 Great Value
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="badge_SpecialOffer"> 🎁 Special Offer
+              </label>
+            </div>
+            <small style="color: #64748b; font-size: 0.75rem; margin-top: 4px; display: block;">
+              Note: Unsubstantiated claims ("Cheaper than Flipkart/Amazon" or "Lowest in India") are strictly disallowed.
+            </small>
+          </div>
+
+          <!-- Internal Reference Prices (Benchmark) -->
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 14px;">
+            <label class="form-label" style="margin-bottom: 2px;">Internal Reference Benchmarks (₹)</label>
+            <small style="color: #64748b; font-size: 0.775rem; display: block; margin-bottom: 10px;">
+              Used strictly for store owner competitive analysis unless verified.
+            </small>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Online Market Ref (₹)</label>
+                <input type="number" id="editOnlineRef" class="form-control" step="0.5" placeholder="e.g. 610">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Local Store Ref (₹)</label>
+                <input type="number" id="editLocalRef" class="form-control" step="0.5" placeholder="e.g. 620">
+              </div>
+            </div>
+          </div>
+
+          <!-- Scheduled Sale -->
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 14px;">
+            <label class="form-label">Schedule Flash / Weekend Sale</label>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Sale Price (₹)</label>
+                <input type="number" id="editSalePrice" class="form-control" step="0.5" placeholder="e.g. 579">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sale Event Name</label>
+                <input type="text" id="editSaleName" class="form-control" placeholder="e.g. Weekend Special">
+              </div>
+            </div>
+            <label class="checkbox-label" style="margin-top: 4px;">
+              <input type="checkbox" id="editSaleActive"> Enable Scheduled Sale Price Now
+            </label>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn-secondary" onclick="closeEditPriceModal()">Cancel</button>
+            <button type="submit" class="btn-primary">Save Price Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

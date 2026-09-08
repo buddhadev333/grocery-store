@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "id": "rule_staples",
+      "category": "Staples & Grains",
+      "discountPercent": 0,
+      "description": "Standard competitive staple pricing",
+      "active": false,
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    {
+      "id": "rule_beverages",
+      "category": "Beverages",
+      "discountPercent": 5,
+      "description": "Additional 5% discount on Tea & Coffee",
+      "active": false,
+      "updatedAt": "2026-09-07T12:00:00Z"
+    },
+    {
+      "id": "rule_household",
+      "category": "Household & Cleaning",
+      "discountPercent": 10,
+      "description": "Clean Home Promotion - 10% off MRP",
+      "active": false,
+      "updatedAt": "2026-09-07T12:00:00Z"
+    }
+  ]
+}
