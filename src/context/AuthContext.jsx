@@ -114,6 +114,10 @@ export const AuthProvider = ({ children }) => {
       isStaff,
       role: user?.role || 'customer',
       ownerName: 'Buddhadev Bera',
+      coOwnerName: 'Lakshmi Kanta Bera',
+      storeAddress: 'Rankinipur, Borachira, Near Huli Mondir, West Bengal, India',
+      storePhone: '+91 6297622545',
+      storeEmail: 'buddhadevbera615@gmail.com',
       login,
       logout,
       authFetch

@@ -11,7 +11,14 @@ export const USERS = [
     displayName: 'Buddhadev Bera',
     role: 'owner',
     title: 'Owner & Store Administrator',
-    // In production, use bcrypt hash. For zero-dependency serverless portability:
+    passwordHash: crypto.createHmac('sha256', SERVER_SECRET).update('Owner@2026').digest('hex')
+  },
+  {
+    id: 'usr_owner_02',
+    username: 'lakshmikanta',
+    displayName: 'Lakshmi Kanta Bera',
+    role: 'owner',
+    title: 'Co-Owner & Store Administrator',
     passwordHash: crypto.createHmac('sha256', SERVER_SECRET).update('Owner@2026').digest('hex')
   },
   {

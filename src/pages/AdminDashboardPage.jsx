@@ -136,7 +136,7 @@ export default function AdminDashboardPage() {
   // Open Price Edit Modal
   const handleOpenPriceModal = (product) => {
     if (!isOwner) {
-      triggerError("Security Alert: Only store owner Buddhadev Bera has permission to edit product prices.");
+      triggerError("Security Alert: Only store owners (Buddhadev Bera & Lakshmi Kanta Bera) have permission to edit product prices.");
       return;
     }
     setPriceModalProduct(product);
@@ -166,7 +166,7 @@ export default function AdminDashboardPage() {
       setPriceModalProduct(null);
       triggerSuccess(
         `Price updated for "${priceModalProduct.name}"`,
-        `New Price: ₹${priceForm.sellingPrice} (MRP: ₹${priceForm.mrp}) • Authorized by ${res.auditReceipt?.authorizedBy || 'Buddhadev Bera'}`
+        `New Price: ₹${priceForm.sellingPrice} (MRP: ₹${priceForm.mrp}) • Authorized by ${res.auditReceipt?.authorizedBy || user?.displayName || 'Store Owner'}`
       );
     } else {
       triggerError(res.error || 'Server rejected price modification.');
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
   // Open Full Product Edit Modal
   const handleOpenEditModal = (product) => {
     if (!isOwner) {
-      triggerError("Security Alert: Only store owner Buddhadev Bera has permission to edit product information.");
+      triggerError("Security Alert: Only store owners (Buddhadev Bera & Lakshmi Kanta Bera) have permission to edit product information.");
       return;
     }
     setEditProductModal(product);
@@ -233,7 +233,7 @@ export default function AdminDashboardPage() {
   // Handle Delete Product
   const handleDelete = async (product) => {
     if (!isOwner) {
-      triggerError("Security Alert: Only store owner Buddhadev Bera has permission to delete products.");
+      triggerError("Security Alert: Only store owners (Buddhadev Bera & Lakshmi Kanta Bera) have permission to delete products.");
       return;
     }
 
@@ -312,10 +312,10 @@ export default function AdminDashboardPage() {
 
             {/* Clear Owner Title */}
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Buddhadev Bera — Owner
+              Buddhadev Bera (Owner) &amp; Lakshmi Kanta Bera (Co-Owner)
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-              Full product management, real-time Indian grocery price control, stock levels, and store catalog administration.
+              FRESH NEST Store Portal • West Bengal, Rankinipur, Borachira, Near Huli Mondir • 📞 +91 6297622545 • ✉️ buddhadevbera615@gmail.com
             </p>
           </div>
 
@@ -348,7 +348,7 @@ export default function AdminDashboardPage() {
             <div>
               <strong className="text-white block">Staff Limited Access Mode</strong>
               <span>
-                You are authenticated as Store Staff. You can update stock availability. Price changes, product deletions, and catalog additions are strictly restricted to Store Owner <strong>Buddhadev Bera</strong>.
+                You are authenticated as Store Staff. You can update stock availability. Price changes, product deletions, and catalog additions are strictly restricted to Store Owners <strong>Buddhadev Bera &amp; Lakshmi Kanta Bera</strong>.
               </span>
             </div>
           </div>
@@ -641,7 +641,7 @@ export default function AdminDashboardPage() {
                               ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200' 
                               : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                           }`}
-                          title={isOwner ? "Edit Price (Owner Only)" : "Price editing restricted to Owner Buddhadev Bera"}
+                          title={isOwner ? "Edit Price (Owner Only)" : "Price editing restricted to Store Owners"}
                         >
                           <DollarSign className="w-3.5 h-3.5" />
                           <span>Edit Price</span>
@@ -697,7 +697,7 @@ export default function AdminDashboardPage() {
                 </div>
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-base">Edit Product Price</h3>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Authorized for: Buddhadev Bera (Owner)</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">Authorized for: {user?.displayName || 'Store Owner'} ({user?.role?.toUpperCase() || 'OWNER'})</p>
                 </div>
               </div>
               <button onClick={() => setPriceModalProduct(null)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
@@ -816,7 +816,7 @@ export default function AdminDashboardPage() {
                 <span className="font-semibold text-slate-700">₹{priceForm.mrp}</span>
               </div>
               <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-200">
-                Security: Changes will be signed & authorized by Buddhadev Bera.
+                Security: Changes will be signed & authorized by {user?.displayName || 'Store Owner'}.
               </div>
             </div>
 
@@ -988,7 +988,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-5">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Add New Product</h3>
-                <p className="text-xs text-slate-500">Authorized by Buddhadev Bera — Owner</p>
+                <p className="text-xs text-slate-500">Authorized by {user?.displayName || 'Store Owner'}</p>
               </div>
               <button onClick={() => setShowAddModal(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
                 <X className="w-5 h-5" />

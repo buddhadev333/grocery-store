@@ -53,8 +53,8 @@ export const Navbar = ({ onOpenCategories }) => {
             <span className="bg-emerald-600 text-white font-bold text-[10px] px-1.5 py-0.2 rounded">
               FREE DELIVERY
             </span>
-            <span className="hidden sm:inline">On orders above ₹499 • Official Store • <strong className="text-amber-400 font-bold">Buddhadev Bera — Owner</strong></span>
-            <span className="sm:hidden">Official Store • <strong className="text-amber-400">Buddhadev Bera — Owner</strong></span>
+            <span className="hidden sm:inline">On orders above ₹499 • Official Store • <strong className="text-amber-400 font-bold">Buddhadev Bera (Owner) &amp; Lakshmi Kanta Bera (Co-Owner)</strong> • 📞 +91 6297622545</span>
+            <span className="sm:hidden">Official Store • <strong className="text-amber-400">Buddhadev Bera &amp; Lakshmi Kanta Bera</strong></span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
             <Link to="/orders" className="hover:text-white transition-colors">

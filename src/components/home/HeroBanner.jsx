@@ -27,7 +27,7 @@ export const HeroBanner = () => {
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-emerald-200">
             <UserCheck className="w-3.5 h-3.5 text-amber-400" />
-            <span>Official Store • <strong className="text-white font-bold">Buddhadev Bera — Owner</strong></span>
+            <span>Official Store • <strong className="text-white font-bold">Buddhadev Bera (Owner) &amp; Lakshmi Kanta Bera (Co-Owner)</strong></span>
           </div>
 
           <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-400/30">

@@ -69,12 +69,20 @@ export const Footer = () => {
             </Link>
 
             {/* Clear Owner Attribution Highlight Box */}
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 max-w-sm">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 max-w-md">
+              <div className="flex items-center gap-2 mb-2">
                 <UserCheck className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="font-extrabold text-white text-xs">
-                  Buddhadev Bera — Owner
+                  Store Leadership & Ownership
                 </span>
+              </div>
+              <div className="space-y-1 mb-2">
+                <p className="font-bold text-emerald-400 text-sm">
+                  Buddhadev Bera — <span className="text-white font-semibold text-xs">Owner</span>
+                </p>
+                <p className="font-bold text-amber-300 text-sm">
+                  Lakshmi Kanta Bera — <span className="text-white font-semibold text-xs">Co-Owner</span>
+                </p>
               </div>
               <p className="text-[11px] text-slate-400 leading-relaxed">
                 "We are dedicated to making healthy, fresh groceries and everyday essentials affordable and easily accessible for every neighborhood family."
@@ -83,22 +91,31 @@ export const Footer = () => {
 
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
               "Everything You Need, Freshly Delivered."<br/>
-              FRESH NEST is an official neighborhood grocery store delivering quality pulses, spices, flour, fresh fruits, vegetables, drinks, chocolates, and household daily-needs.
+              FRESH NEST is your local neighborhood grocery store delivering quality pulses, spices, flour, fresh fruits, vegetables, drinks, chocolates, and household daily-needs.
             </p>
 
-            {/* Contact Section */}
-            <div className="pt-1 text-[11px] text-slate-400 space-y-1.5">
-              <div className="flex items-center gap-2 text-slate-300">
-                <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Store Hub: Main Market Road, Bengaluru & Regional Delivery Hubs, India</span>
+            {/* Contact Section with User Provided Details */}
+            <div className="pt-2 text-[11px] text-slate-300 space-y-2">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold text-white block">Store Address:</span>
+                  <span className="text-slate-300">West Bengal, Rankinipur, Borachira, Near Huli Mondir, India</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
-                <Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Email: support@freshnestgrocery.in</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-300">
+
+              <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Customer Helpline: +91 98765 43210 / 1800-FRESH-NEST</span>
+                <span>
+                  Phone: <a href="tel:6297622545" className="font-bold text-white hover:text-emerald-400 transition-colors">+91 6297622545</a>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>
+                  Email: <a href="mailto:buddhadevbera615@gmail.com" className="font-bold text-white hover:text-emerald-400 transition-colors">buddhadevbera615@gmail.com</a>
+                </span>
               </div>
             </div>
           </div>
@@ -151,10 +168,10 @@ export const Footer = () => {
 
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
               <span className="text-[10px] font-bold text-slate-400 block uppercase mb-1">
-                Restricted Portal
+                Owner & Co-Owner Portal
               </span>
               <p className="text-[11px] text-slate-400 mb-2 leading-tight">
-                Secure price & product management for owner Buddhadev Bera.
+                Secure price & product management for Buddhadev Bera & Lakshmi Kanta Bera.
               </p>
               <Link
                 to="/admin/login"
@@ -174,7 +191,9 @@ export const Footer = () => {
             <span>•</span>
             <span className="text-slate-400 font-medium">FRESH NEST Store</span>
             <span>•</span>
-            <span className="text-slate-300 font-bold">Buddhadev Bera — Owner</span>
+            <span className="text-slate-300 font-bold">Buddhadev Bera (Owner)</span>
+            <span>&</span>
+            <span className="text-slate-300 font-bold">Lakshmi Kanta Bera (Co-Owner)</span>
           </div>
           <div className="flex items-center gap-4 text-xs">
             <Link to="/catalog" className="hover:text-slate-300">Catalog</Link>

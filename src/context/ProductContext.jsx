@@ -225,7 +225,7 @@ export const ProductProvider = ({ children }) => {
     if (!isOwner) {
       return {
         success: false,
-        error: 'Permission Denied: Only store owner Buddhadev Bera can run bulk price updates.'
+        error: 'Permission Denied: Only store owners (Buddhadev Bera & Lakshmi Kanta Bera) can run bulk price updates.'
       };
     }
 

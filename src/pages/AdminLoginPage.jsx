@@ -21,6 +21,9 @@ export default function AdminLoginPage() {
     if (userType === 'owner') {
       setUsername('buddhadev');
       setPassword('Owner@2026');
+    } else if (userType === 'coowner') {
+      setUsername('lakshmikanta');
+      setPassword('Owner@2026');
     } else if (userType === 'staff') {
       setUsername('staff');
       setPassword('Staff@2026');
@@ -49,7 +52,7 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-4 shadow-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Official Store Portal • Buddhadev Bera — Owner</span>
+            <span>Official Store Portal • Buddhadev Bera (Owner) &amp; Lakshmi Kanta Bera (Co-Owner)</span>
           </div>
 
           <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-amber-400 mx-auto mb-4 shadow-lg">
@@ -150,7 +153,7 @@ export default function AdminLoginPage() {
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5 text-center">
               Quick Role Test Credentials
             </span>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleSelectPreset('owner')}
@@ -158,9 +161,23 @@ export default function AdminLoginPage() {
               >
                 <div className="flex items-center gap-1.5 text-emerald-800 font-bold text-xs">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Owner Portal</span>
+                  <span>Owner</span>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-0.5">Buddhadev Bera (Full Rights)</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">Buddhadev Bera</p>
+                <span className="text-[9px] text-emerald-700 font-semibold block">Full Rights</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectPreset('coowner')}
+                className="p-2.5 rounded-xl border border-teal-200 bg-teal-50/50 hover:bg-teal-100 text-left transition"
+              >
+                <div className="flex items-center gap-1.5 text-teal-800 font-bold text-xs">
+                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+                  <span>Co-Owner</span>
+                </div>
+                <p className="text-[10px] text-slate-500 mt-0.5">Lakshmi Kanta Bera</p>
+                <span className="text-[9px] text-teal-700 font-semibold block">Full Rights</span>
               </button>
 
               <button
@@ -170,9 +187,10 @@ export default function AdminLoginPage() {
               >
                 <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
                   <Store className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Staff Portal</span>
+                  <span>Staff</span>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-0.5">Rahul (Stock Only, No Prices)</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">Rahul</p>
+                <span className="text-[9px] text-slate-500 font-semibold block">Stock Only</span>
               </button>
             </div>
           </div>

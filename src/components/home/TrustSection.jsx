@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   ShieldCheck, Award, Tag, ShoppingBag, 
-  Truck, HeartHandshake, Sparkles, UserCheck 
+  Truck, HeartHandshake, Sparkles, UserCheck, MapPin, Phone, Mail 
 } from 'lucide-react';
 
 export const TrustSection = () => {
@@ -9,38 +9,38 @@ export const TrustSection = () => {
     {
       icon: UserCheck,
       color: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-      title: 'Buddhadev Bera — Owner',
-      desc: 'Personally managed and supervised store guaranteeing authentic products, fair pricing, and neighborhood trust.'
+      title: 'Buddhadev Bera & Lakshmi Kanta Bera',
+      desc: 'Personally supervised and operated store by Buddhadev Bera (Owner) and Lakshmi Kanta Bera (Co-Owner), guaranteeing genuine groceries and neighborhood trust.'
     },
     {
       icon: Award,
       color: 'bg-amber-100 text-amber-800 border-amber-200',
       title: 'Quality Products',
-      desc: '100% verified genuine brands and daily farm-fresh fruits and vegetables sourced directly from regional mandis.'
+      desc: '100% verified genuine brands and daily farm-fresh fruits and vegetables sourced directly from trusted regional mandis.'
     },
     {
       icon: Tag,
       color: 'bg-blue-100 text-blue-800 border-blue-200',
       title: 'Affordable Prices',
-      desc: 'Realistic Indian market rates matching or beating offline supermarkets. No artificial markups or hidden fees.'
+      desc: 'Realistic Indian market rates matching or beating offline supermarkets. No artificial markups, transparent savings on every pack.'
     },
     {
       icon: ShoppingBag,
       color: 'bg-purple-100 text-purple-800 border-purple-200',
       title: 'Easy Shopping',
-      desc: 'Effortless multi-category browsing, real-time search, customer ratings, and instant cart access across all devices.'
+      desc: 'Effortless multi-category browsing, real-time instant search, customer ratings, and one-click cart access across mobile and desktop.'
     },
     {
       icon: Truck,
       color: 'bg-teal-100 text-teal-800 border-teal-200',
       title: 'Convenient Ordering',
-      desc: 'Flexible doorstep delivery slots, free delivery on orders above ₹499, and transparent 5-stage order tracking.'
+      desc: 'Flexible doorstep delivery slots, free delivery on orders above ₹499, and transparent 5-stage order status tracking.'
     },
     {
       icon: HeartHandshake,
       color: 'bg-rose-100 text-rose-800 border-rose-200',
       title: 'Customer-Friendly Service',
-      desc: 'Hassle-free doorstep returns, responsive customer assistance, and friendly local kirana warmth.'
+      desc: 'Hassle-free doorstep returns, responsive phone/email support, and caring local store warmth.'
     }
   ];
 
@@ -52,16 +52,16 @@ export const TrustSection = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Store Promise & Integrity</span>
+            <span>Store Promise & Leadership</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white mb-2">
             Why Shop at FRESH NEST?
           </h2>
           <p className="text-xs sm:text-sm text-slate-300">
-            Founded and actively managed by <strong className="text-amber-400 font-bold">Buddhadev Bera</strong>, committed to providing every Indian household with everyday grocery savings and dependable service.
+            Founded and managed by <strong className="text-amber-400 font-bold">Buddhadev Bera (Owner)</strong> & <strong className="text-amber-300 font-bold">Lakshmi Kanta Bera (Co-Owner)</strong>. Located at Rankinipur, Borachira, Near Huli Mondir, West Bengal.
           </p>
         </div>
 
@@ -90,14 +90,24 @@ export const TrustSection = () => {
           })}
         </div>
 
-        {/* Owner Signature Line */}
-        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Official Store • Verified Owner Management: <strong className="text-white">Buddhadev Bera</strong></span>
+        {/* Store Location & Direct Contact Bar */}
+        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-300">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-xl">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+              <span>West Bengal, Rankinipur, Borachira, Near Huli Mondir</span>
+            </span>
           </div>
-          <div className="text-emerald-400 font-semibold">
-            100% Quality Assurance Guarantee
+
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="tel:6297622545" className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors font-bold text-white">
+              <Phone className="w-3.5 h-3.5 text-emerald-400" />
+              <span>+91 6297622545</span>
+            </a>
+            <a href="mailto:buddhadevbera615@gmail.com" className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors font-bold text-white">
+              <Mail className="w-3.5 h-3.5 text-emerald-400" />
+              <span>buddhadevbera615@gmail.com</span>
+            </a>
           </div>
         </div>
       </div>
