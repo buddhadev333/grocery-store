@@ -45,7 +45,7 @@ export const HeroBanner = () => {
 
         {/* Requested Subtitle */}
         <p className="text-sm sm:text-base md:text-lg text-emerald-100/90 leading-relaxed mb-8 max-w-2xl font-normal">
-          Easily find your daily grocery needs from farm-fresh vegetables and fruits to staple grains, cooking oils, chai-time snacks, chocolates, and household essentials at affordable, honest market prices.
+          Easily find your daily grocery needs from staple grains and flours to pure spices, cooking oils, chai-time snacks, chocolates, and household essentials at affordable, honest market prices.
         </p>
 
         {/* Integrated Quick Search Bar */}
@@ -54,7 +54,7 @@ export const HeroBanner = () => {
             <Search className="w-5 h-5 text-slate-400 ml-3.5 shrink-0" />
             <input
               type="text"
-              placeholder="Search 378+ groceries (e.g. Atta, Basmati Rice, Onion, Kurkure, Dairy Milk)..."
+              placeholder="Search 300+ groceries (e.g. Atta, Basmati Rice, Desi Ghee, Kurkure, Dairy Milk)..."
               value={quickSearch}
               onChange={(e) => setQuickSearch(e.target.value)}
               className="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none font-medium"

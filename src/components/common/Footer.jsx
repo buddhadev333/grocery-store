@@ -39,7 +39,7 @@ export const Footer = () => {
             </div>
             <div>
               <h4 className="text-xs font-bold text-white uppercase tracking-wider">Direct Sourcing</h4>
-              <p className="text-xs text-slate-400">Daily mandi fresh fruits & vegetables</p>
+              <p className="text-xs text-slate-400">Trusted brands &amp; daily pantry staples</p>
             </div>
           </div>
 
@@ -90,8 +90,8 @@ export const Footer = () => {
             </div>
 
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
-              "Everything You Need, Freshly Delivered."<br/>
-              FRESH NEST is your local neighborhood grocery store delivering quality pulses, spices, flour, fresh fruits, vegetables, drinks, chocolates, and household daily-needs.
+              &quot;Everything You Need, Freshly Delivered.&quot;<br/>
+              FRESH NEST is your local neighborhood grocery store delivering quality pulses, spices, flour, rice, cooking oils, snacks, drinks, chocolates, and household daily-needs.
             </p>
 
             {/* Contact Section with User Provided Details */}
@@ -126,14 +126,13 @@ export const Footer = () => {
               <span>Grocery Categories</span>
             </h4>
             <ul className="space-y-2 text-slate-400">
-              <li><Link to="/category/fresh-vegetables" className="hover:text-emerald-400 transition-colors">Vegetables</Link></li>
-              <li><Link to="/category/fruits" className="hover:text-emerald-400 transition-colors">Fresh Fruits</Link></li>
-              <li><Link to="/category/rice-grains" className="hover:text-emerald-400 transition-colors">Rice & Grains</Link></li>
-              <li><Link to="/category/dal-pulses" className="hover:text-emerald-400 transition-colors">Pulses & Dal</Link></li>
-              <li><Link to="/category/cooking-oil-ghee" className="hover:text-emerald-400 transition-colors">Cooking Oil & Ghee</Link></li>
-              <li><Link to="/category/spices-masala" className="hover:text-emerald-400 transition-colors">Spices & Masala</Link></li>
-              <li><Link to="/category/atta-flour" className="hover:text-emerald-400 transition-colors">Atta & Flours</Link></li>
-              <li><Link to="/category/dairy" className="hover:text-emerald-400 transition-colors">Dairy, Bread & Eggs</Link></li>
+              <li><Link to="/category/spices-masala" className="hover:text-emerald-400 transition-colors">Spices &amp; Masala</Link></li>
+              <li><Link to="/category/tea-coffee" className="hover:text-emerald-400 transition-colors">Tea &amp; Coffee</Link></li>
+              <li><Link to="/category/rice-grains" className="hover:text-emerald-400 transition-colors">Rice &amp; Grains</Link></li>
+              <li><Link to="/category/dal-pulses" className="hover:text-emerald-400 transition-colors">Pulses &amp; Dal</Link></li>
+              <li><Link to="/category/cooking-oil-ghee" className="hover:text-emerald-400 transition-colors">Cooking Oil &amp; Ghee</Link></li>
+              <li><Link to="/category/atta-flour" className="hover:text-emerald-400 transition-colors">Atta &amp; Flours</Link></li>
+              <li><Link to="/category/dairy" className="hover:text-emerald-400 transition-colors">Dairy, Bread &amp; Eggs</Link></li>
             </ul>
           </div>
 
@@ -143,11 +142,11 @@ export const Footer = () => {
               Daily Essentials
             </h4>
             <ul className="space-y-2 text-slate-400">
-              <li><Link to="/category/biscuits" className="hover:text-emerald-400 transition-colors">Biscuits & Cookies</Link></li>
-              <li><Link to="/category/chocolates-candy" className="hover:text-emerald-400 transition-colors">Chocolates & Candy</Link></li>
-              <li><Link to="/category/chips-namkeen" className="hover:text-emerald-400 transition-colors">Snacks & Namkeen</Link></li>
-              <li><Link to="/category/sauces-vinegar" className="hover:text-emerald-400 transition-colors">Sauces & Vinegar</Link></li>
-              <li><Link to="/category/soft-drinks-beverages" className="hover:text-emerald-400 transition-colors">Cold Drinks & Beverages</Link></li>
+              <li><Link to="/category/biscuits" className="hover:text-emerald-400 transition-colors">Biscuits &amp; Cookies</Link></li>
+              <li><Link to="/category/chocolates-candy" className="hover:text-emerald-400 transition-colors">Chocolates &amp; Candy</Link></li>
+              <li><Link to="/category/chips-namkeen" className="hover:text-emerald-400 transition-colors">Snacks &amp; Namkeen</Link></li>
+              <li><Link to="/category/sauces-vinegar" className="hover:text-emerald-400 transition-colors">Sauces &amp; Vinegar</Link></li>
+              <li><Link to="/category/soft-drinks-beverages" className="hover:text-emerald-400 transition-colors">Cold Drinks &amp; Beverages</Link></li>
               <li><Link to="/category/stationery" className="hover:text-emerald-400 transition-colors">Stationery Essentials</Link></li>
               <li><Link to="/category/cleaning-household" className="hover:text-emerald-400 transition-colors">Household Essentials</Link></li>
               <li><Link to="/category/personal-care" className="hover:text-emerald-400 transition-colors">Personal Care</Link></li>
@@ -157,10 +156,10 @@ export const Footer = () => {
           {/* Column 5: Owner & Quick Links */}
           <div>
             <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">
-              Owner & Store Access
+              Owner &amp; Store Access
             </h4>
             <ul className="space-y-2 text-slate-400 mb-5">
-              <li><Link to="/catalog" className="hover:text-emerald-400 transition-colors">All 378 Products</Link></li>
+              <li><Link to="/catalog" className="hover:text-emerald-400 transition-colors">All Grocery Items</Link></li>
               <li><Link to="/orders" className="hover:text-emerald-400 transition-colors">Track Live Orders</Link></li>
               <li><Link to="/cart" className="hover:text-emerald-400 transition-colors">Shopping Basket</Link></li>
               <li><Link to="/wishlist" className="hover:text-emerald-400 transition-colors">Saved Wishlist</Link></li>

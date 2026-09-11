@@ -1,25 +1,5 @@
 export const CATEGORIES = [
   {
-    id: "fresh-vegetables",
-    name: "Fresh Vegetables",
-    slug: "fresh-vegetables",
-    icon: "Carrot",
-    description: "Farm-fresh daily vegetables, greens, and gourds sourced every morning from regional mandis.",
-    color: "from-emerald-500 to-green-600",
-    bannerImg: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=1000&auto=format&fit=crop&q=80",
-    subcategories: ["Daily Staples", "Leafy Greens", "Gourds & Cucumbers", "Specialty Veggies"]
-  },
-  {
-    id: "fruits",
-    name: "Fruits",
-    slug: "fruits",
-    icon: "Apple",
-    description: "Naturally ripened sweet apples, bananas, seasonal mangoes, citrus, and fresh berries.",
-    color: "from-amber-500 to-orange-600",
-    bannerImg: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=1000&auto=format&fit=crop&q=80",
-    subcategories: ["Apples & Pears", "Bananas", "Citrus", "Mangoes", "Melons", "Tropical", "Berries & Grapes", "Exotic Fruits"]
-  },
-  {
     id: "spices-masala",
     name: "Spices & Masala",
     slug: "spices-masala",

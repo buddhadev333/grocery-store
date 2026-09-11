@@ -4,7 +4,7 @@ import { CATEGORIES } from '../data/categories';
 import { useAuth } from './AuthContext';
 
 const ProductContext = createContext();
-const STORAGE_KEY = 'fresh_nest_catalog_v1';
+const STORAGE_KEY = 'fresh_nest_catalog_v2';
 
 export const ProductProvider = ({ children }) => {
   const { authFetch, isOwner, user } = useAuth();
@@ -15,13 +15,13 @@ export const ProductProvider = ({ children }) => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.filter(p => p.category !== 'Fresh Vegetables' && p.category !== 'Fruits');
         }
       }
     } catch (e) {
       console.error("Error reading products from localStorage:", e);
     }
-    return initialProducts;
+    return initialProducts.filter(p => p.category !== 'Fresh Vegetables' && p.category !== 'Fruits');
   });
 
   // Save to localStorage whenever products change
@@ -264,11 +264,12 @@ export const ProductProvider = ({ children }) => {
     return { success: true, count, message: `Updated pricing for ${count} product(s).` };
   };
 
-  // Reset to original 378 product demo catalog
+  // Reset to original grocery catalog
   const resetToDemo = () => {
-    setProducts(initialProducts);
+    const cleanList = initialProducts.filter(p => p.category !== 'Fresh Vegetables' && p.category !== 'Fruits');
+    setProducts(cleanList);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanList));
     } catch (e) {
       console.error(e);
     }

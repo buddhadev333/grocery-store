@@ -16,7 +16,7 @@ export const TrustSection = () => {
       icon: Award,
       color: 'bg-amber-100 text-amber-800 border-amber-200',
       title: 'Quality Products',
-      desc: '100% verified genuine brands and daily farm-fresh fruits and vegetables sourced directly from trusted regional mandis.'
+      desc: '100% verified genuine brands and trusted staple grocery items sourced directly from certified distributors.'
     },
     {
       icon: Tag,

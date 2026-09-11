@@ -471,13 +471,13 @@ export default function AdminDashboardPage() {
           {isOwner && (
             <button
               onClick={() => {
-                if (window.confirm("Reset all 378 products to initial demo state?")) {
+                if (window.confirm("Reset all products to initial catalog state?")) {
                   resetToDemo();
-                  triggerSuccess("Catalog Reset", "Restored 378 demo grocery products.");
+                  triggerSuccess("Catalog Reset", `Restored initial grocery catalog.`);
                 }
               }}
               className="bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5"
-              title="Reset to original 378 products"
+              title="Reset to original catalog"
             >
               <RefreshCw className="w-3.5 h-3.5 text-slate-400" /> Reset Demo
             </button>

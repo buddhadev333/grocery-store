@@ -89,7 +89,7 @@ export const CartDrawer = () => {
               </div>
               <p className="font-bold text-slate-700 text-base">Your basket is empty</p>
               <p className="text-xs text-slate-400 mt-1 max-w-[200px]">
-                Explore our fresh vegetables, fruits, and staples to start saving!
+                Explore our groceries, pantry staples, and snacks to start saving!
               </p>
               <Link 
                 to="/catalog" 

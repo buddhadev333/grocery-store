@@ -30,10 +30,6 @@ export const HomePage = () => {
       .slice(10, 22);
   }, [products]);
 
-  const freshProduce = useMemo(() => {
-    return products.filter(p => ["Fresh Vegetables", "Fruits"].includes(p.category));
-  }, [products]);
-
   const pantryStaples = useMemo(() => {
     return products.filter(p => 
       ["Atta & Flour", "Rice & Grains", "Dal & Pulses", "Cooking Oil & Ghee", "Spices & Masala"].includes(p.category)
@@ -83,7 +79,7 @@ export const HomePage = () => {
       {/* 5. Best Deals */}
       <ProductSection
         title="Today's Best Deals"
-        subtitle="Biggest everyday savings on pantry essentials, fresh produce, and treats"
+        subtitle="Biggest everyday savings on pantry essentials, snacks, and treats"
         items={bestDeals}
         viewAllLink="/catalog?filter=deals"
         badgeText="🔥 Maximum Savings"
@@ -99,17 +95,6 @@ export const HomePage = () => {
         viewAllLink="/catalog"
         badgeText="✨ Fresh Stock"
         badgeColor="bg-emerald-100 text-emerald-800"
-        onQuickView={setSelectedProduct}
-      />
-
-      {/* 7. Fresh Vegetables & Fruits Spotlight */}
-      <ProductSection
-        title="Mandi Fresh Vegetables & Fruits"
-        subtitle="Handpicked daily onions, potatoes, tomatoes, greens, apples, and bananas"
-        items={freshProduce}
-        viewAllLink="/category/fresh-vegetables"
-        badgeText="🌱 Farm Direct"
-        badgeColor="bg-green-100 text-green-800"
         onQuickView={setSelectedProduct}
       />
 
